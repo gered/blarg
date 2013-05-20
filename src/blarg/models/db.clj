@@ -15,6 +15,7 @@
 
 (def users (db-url "blarg_users"))
 (def posts (db-url "blarg_posts"))
+(def files (db-url "blarg_files"))
 
 (defmacro ->view-values
   "returns a sequence of only the values returned by running a view"
