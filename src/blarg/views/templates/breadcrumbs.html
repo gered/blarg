@@ -1,0 +1,9 @@
+<ul class="breadcrumb">
+{% for crumb in breadcrumbs %}
+{% if forloop.last %}
+	<li class="active">{{crumb.name}}</li>
+{% else %}
+	<li><a href="{{context}}{{crumb.url}}">{{crumb.name}}</a> <span class="divider">/</span></li>
+{% endif %}
+{% endfor %}
+</ul>

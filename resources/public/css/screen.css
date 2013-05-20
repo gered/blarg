@@ -1,0 +1,61 @@
+html,
+body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin-top: 10px;
+}
+
+.error {
+    color: red;
+}
+
+.content[role="main"] {
+	/*
+	margin-left: 10px;
+	margin-right: 10px;
+	*/
+}
+
+.content[role="main"] > div,
+.content[role="main"] > ul, 
+.content[role="main"] > p,
+.content[role="main"] > form {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.label a {
+	color: #fff;
+}
+
+.single-post {
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+}
+
+.unpublished-post {
+	background-color: #e1edff;
+}
+
+.post {
+	margin-bottom: 30px;
+	padding-bottom: 10px;
+}
+
+.post .header {
+	margin-bottom: 10px;
+}
+
+.post .header h2 {
+	margin-bottom: 0px;
+}
+
+.login-container {
+	margin: 0 auto;
+	width: 220px;
+}
+
+.center {
+	float: none;
+	margin-left: auto;
+	margin-right: auto;
+}
