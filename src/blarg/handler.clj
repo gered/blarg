@@ -9,7 +9,8 @@
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
             [com.postspectacular.rotor :as rotor]
-            [blarg.views.layout :as layout]))
+            [blarg.views.layout :as layout]
+            [blarg.models.db :as db]))
 
 (defroutes app-routes
   (route/resources "/")
@@ -36,7 +37,10 @@
     [:shared-appender-config :rotor]
     {:path "blarg.log" :max-size 10000 :backlog 10})
   
-  (timbre/info "blarg started successfully"))
+  (timbre/info "blarg started successfully")
+  
+  (timbre/info "touching database...")
+  (db/touch-databases))
 
 (defn destroy
   "destroy will be called when your application
