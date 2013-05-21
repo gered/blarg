@@ -44,6 +44,6 @@
   []
   (couch/get-database users)
   (when (couch/get-database files)
-    (touch-design-doc posts "_design/files" "couchdb/design_docs/files.js"))
+    (touch-design-doc files "_design/files" "couchdb/design_docs/files.js"))
   (when (couch/get-database posts)
     (touch-design-doc posts "_design/posts" "couchdb/design_docs/posts.js")))
