@@ -13,7 +13,8 @@
                  [com.ashafa/clutch "0.4.0-RC1"]
                  [slugger "1.0.1"]
                  [clj-time "0.5.0"]
-                 [org.clojure/math.numeric-tower "0.0.2"]]
+                 [org.clojure/math.numeric-tower "0.0.2"]
+                 [cheshire "5.1.2"]]
   :plugins [[lein-ring "0.8.5"]]
   :ring {:handler blarg.handler/war-handler
          :init    blarg.handler/init

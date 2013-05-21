@@ -1,12 +1,12 @@
 (ns blarg.config
+  (:use [blarg.util])
   (:require [clojure.java.io :as io])
   (:import [java.io PushbackReader]))
 
 (def site-config (atom nil))
 
 (defn load-config []
-  (with-open [r (PushbackReader. (io/reader (io/resource "site.config")))]
-    (read r)))
+  (load-clj "site.config"))
 
 (defn get-config
   "returns the entire site configuration"

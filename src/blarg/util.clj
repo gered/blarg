@@ -1,12 +1,27 @@
 (ns blarg.util
-  (:require [noir.io :as io]
-            [markdown.core :as md]))
+  (:require [clojure.java.io :as io]
+            [markdown.core :as md]
+            [noir.io]
+            [cheshire.core :refer :all])
+  (:import [java.io PushbackReader]))
+
+(defn load-clj
+  "loads a file from the resources directory, parses and returns it as clojure"
+  [file]
+  (with-open [r (PushbackReader. (io/reader (io/resource file)))]
+    (read r)))
+
+(defn load-json
+  "loads a file from the resources directory, parses it as JSON and returns it
+   as an equivalent clojure object"
+  [file]
+  (parse-stream (io/reader (io/resource file)) true))
 
 (defn md->html
   "reads a markdown file from public/md and returns an HTML string"
   [filename]
   (->>
-    (io/slurp-resource filename)
+    (noir.io/slurp-resource filename)
     (md/md-to-html-string)))
 
 (defn string->int
