@@ -46,3 +46,8 @@
     (< n low) low
     (> n high) high
     :else n))
+
+(defn ensure-prefix [s prefix]
+  (if-not (.startsWith s prefix)
+    (str prefix s)
+    s))

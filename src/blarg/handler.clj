@@ -2,6 +2,7 @@
   (:use blarg.routes.home
         blarg.routes.posts
         blarg.routes.auth
+        blarg.routes.files
         blarg.routes.accessrules
         compojure.core)
   (:require [noir.util.middleware :as middleware]
@@ -44,7 +45,7 @@
   (timbre/info "blarg is shutting down..."))
 
 ;;append your application routes to the all-routes vector
-(def all-routes [auth-routes home-routes posts-routes app-routes])
+(def all-routes [auth-routes home-routes posts-routes files-routes app-routes])
 
 (def app (-> all-routes
              (middleware/app-handler)
