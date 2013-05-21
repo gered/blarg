@@ -1,4 +1,5 @@
 (ns blarg.models.db
+  (:use [blarg.util])
   (:require [blarg.config :as config]
             [com.ashafa.clutch :as couch]))
 
@@ -27,3 +28,15 @@
   "returns only the first value from the sequence returned by running a view"
   [& body]
   `(first (->view-values ~@body)))
+
+(defn touch-databases
+  "verifies that the required databases are present, creating them if they
+   are not there (including the views)."
+  []
+  (couch/get-database users)
+  (couch/get-database files)
+  (when (couch/get-database posts)
+    (couch/with-db posts
+      (let [doc (couch/get-document "_design/posts")]
+        (if (nil? doc)
+          (couch/put-document (load-json "couchdb/design_docs/posts.js")))))))
