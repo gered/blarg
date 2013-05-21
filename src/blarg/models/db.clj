@@ -29,14 +29,21 @@
   [& body]
   `(first (->view-values ~@body)))
 
+(defn touch-design-doc
+  "verifies that a design doc is present in the given db, creating it if
+   it is not there"
+  [db design-doc-id doc-js-path]
+  (couch/with-db db
+    (let [doc (couch/get-document design-doc-id)]
+      (if (nil? doc)
+        (couch/put-document (load-json doc-js-path))))))
+
 (defn touch-databases
   "verifies that the required databases are present, creating them if they
    are not there (including the views)."
   []
   (couch/get-database users)
-  (couch/get-database files)
+  (when (couch/get-database files)
+    (touch-design-doc posts "_design/files" "couchdb/design_docs/files.js"))
   (when (couch/get-database posts)
-    (couch/with-db posts
-      (let [doc (couch/get-document "_design/posts")]
-        (if (nil? doc)
-          (couch/put-document (load-json "couchdb/design_docs/posts.js")))))))
+    (touch-design-doc posts "_design/posts" "couchdb/design_docs/posts.js")))
