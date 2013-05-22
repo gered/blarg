@@ -15,3 +15,13 @@
           (merge 
             {:data gz}
             attachment-info))))))
+
+(defn list-files [path]
+  (->view-values
+    (couch/with-db files
+      (couch/get-view "files" "listPublishedByPath" {:key path}))))
+
+(defn get-tree []
+  (->view-keys
+    (couch/with-db files
+      (couch/get-view "files" "listPaths" {:group true}))))
