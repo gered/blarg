@@ -65,9 +65,7 @@
   (update-post id nil nil nil nil publish? reset-date?))
 
 (defn list-tags []
-  (map
-    (fn [x]
-      (:key x))
+  (->view-keys
     (couch/with-db posts
       (couch/get-view "posts" "listTags" {:group true}))))
 
