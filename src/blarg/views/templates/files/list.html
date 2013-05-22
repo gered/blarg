@@ -1,0 +1,83 @@
+{% extends "blarg/views/templates/base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+	<h2>Index of {{path}}</h2>
+</div>
+
+<div>
+	<div class="pull-left">
+		<select id="tree">
+		{% for folder in tree %}
+		<option{% ifequal folder path %} selected{% endifequal %}>{{folder}}</option>
+		{% endfor %}
+		</select>
+	</div>
+	<div class="pull-right">
+		<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#newFileModal">Upload New File</a>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<table class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th width="440px">Filename</th>
+			<th width="100px">Size</th>
+			<th width="240px">Last Modified</th>
+			<th width="160px">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for file in files %}
+		<tr>
+			<td>
+				<a href="{{context}}/files{{path}}{{file.filename}}"><i class="icon-file"></i>  {{file.filename}}</a><br />
+				<small class="muted">{{file.content-type}}</small>
+			</td>
+			<td>{{file.size}}</td>
+			<td>{{file.last_modified|to_fulltime}}</td>
+			<td>
+				<a class="btn btn-warning" data-updatefileid="{{file.id}}" href="#">Update</a>
+				<a class="btn btn-danger" data-deletefileid="{{file.id}}" href="#">Delete</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<div id="newFileModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="newFileModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="newFileModalLabel">Upload New File</h3>
+	</div>
+	<form action="{{context}}/uploadfile" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<div class="modal-body">
+			<div class="control-group">
+				<label class="control-label" for="newPath">Path</label>
+				<div class="controls">
+					<input type="text" id="newPath" name="path" value="{{path}}" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="newFile">Upload File</label>
+				<div class="controls">
+					<input type="file" id="newFile" name="file" placeholder="File" />
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button type="submit" class="btn btn-primary">Upload</button>
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+$('#tree').change(function() {
+	window.location.href = '{{context}}/listfiles' + $(this).val();
+})
+</script>
+
+{% endblock %}

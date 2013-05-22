@@ -9,7 +9,10 @@
 
 (defn list-files [path]
   (layout/render
-    "files/list.html" {:files (files/list-files path)}))
+    "files/list.html" {:html-title (->html-title [(str "Files in " path)])
+                       :path path
+                       :files (files/list-files path)
+                       :tree (files/get-tree)}))
 
 (defn get-file [path]
   (if-let [file (files/get-file path)]

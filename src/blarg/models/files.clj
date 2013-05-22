@@ -1,5 +1,6 @@
 (ns blarg.models.files
-  (:use [blarg.models.db])
+  (:use [blarg.models.db]
+        [blarg.datetime])
   (:require [com.ashafa.clutch :as couch]
             [clojure.java.io :as io]))
 
@@ -17,9 +18,18 @@
             attachment-info))))))
 
 (defn list-files [path]
-  (->view-values
-    (couch/with-db files
-      (couch/get-view "files" "listPublishedByPath" {:key path}))))
+  (if-let [file-list (->view-values
+                       (couch/with-db files
+                         (couch/get-view "files" "listPublishedByPath" {:key path})))]
+    (map
+      (fn [f]
+        (let [attachment (second (first (:_attachments f)))]
+          {:id (:_id f)
+           :filename (:filename f)
+           :last_modified (parse-timestamp (:last_modified_at f))
+           :content-type (:content_type attachment)
+           :size (:length attachment)}))
+      file-list)))
 
 (defn get-tree []
   (->view-keys
