@@ -1,6 +1,7 @@
 (ns blarg.models.files
   (:use [blarg.models.db]
-        [blarg.datetime])
+        [blarg.datetime]
+        [blarg.util])
   (:require [com.ashafa.clutch :as couch]
             [clojure.java.io :as io]))
 
@@ -35,3 +36,15 @@
   (->view-keys
     (couch/with-db files
       (couch/get-view "files" "listPaths" {:group true}))))
+
+(defn add-file [path filename file content-type]
+  (let [proper-path (ensure-prefix path "/")
+        id (str proper-path filename)]
+    (if-let [doc (couch/with-db files
+                   (couch/put-document {:_id id
+                                        :filename filename
+                                        :path proper-path
+                                        :last_modified_at (get-timestamp)
+                                        :published true}))]
+      (couch/with-db files
+        (couch/put-attachment doc file :filename filename :mime-type content-type)))))

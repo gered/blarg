@@ -14,6 +14,16 @@
                        :files (files/list-files path)
                        :tree (files/get-tree)}))
 
+(defn handle-new-file [path file]
+  (println "path: " path ", file: " file)
+  (if-let [newfile (files/add-file 
+                     (ensure-prefix path "/")
+                     (:filename file)
+                     (:tempfile file)
+                     (:content-type file))]
+    (resp/redirect (str "/listfiles" (ensure-prefix path "/")))
+    (throw (Exception. "Error uploading file"))))
+
 (defn get-file [path]
   (if-let [file (files/get-file path)]
     (resp/content-type (:content_type file) (:data file))
@@ -22,4 +32,5 @@
 (defroutes files-routes
   (restricted GET "/listfiles" [] (list-files "/"))
   (restricted GET "/listfiles/*" [*] (list-files (ensure-prefix * "/")))
+  (restricted POST "/uploadfile" [path file] (handle-new-file path file))
   (GET "/files/*" [*] (get-file (ensure-prefix * "/"))))
