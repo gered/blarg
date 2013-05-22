@@ -18,6 +18,12 @@
 (def posts (db-url "blarg_posts"))
 (def files (db-url "blarg_files"))
 
+(defmacro ->view-keys
+  "returns a sequence of only the keys returned by running a view"
+  [& body]
+  `(if-let [result# ~@body]
+     (map (fn [x#] (:key x#)) result#)))
+
 (defmacro ->view-values
   "returns a sequence of only the values returned by running a view"
   [& body]
