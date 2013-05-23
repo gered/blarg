@@ -75,10 +75,48 @@
 	</form>
 </div>
 
+<div id="deleteFileModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteFileModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="deleteFileModalLabel">Delete File</h3>
+	</div>
+	<form action="{{context}}/deletefile" method="post" class="form-horizontal">
+		<input type="hidden" id="deleteFileId" name="file" />
+		<div class="modal-body">
+			<p>Confirm that you would like to delete the following file:</p>
+			<p><strong id="deleteFileModalFilename"></strong></p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button type="submit" class="btn btn-primary">Delete</button>
+		</div>
+	</form>
+</div>
+
 <script type="text/javascript">
 $('#tree').change(function() {
 	window.location.href = '{{context}}/listfiles' + $(this).val();
-})
+});
+
+$('a[data-deletefileid]').click(function() {
+	var fileId = $(this).data('deletefileid');
+
+	$('#deleteFileModalOkNoReset').data('forfileid', fileId);
+	$('#deleteFileModalOk').data('forfileid', fileId);
+	$('#deleteFileModal').modal({backdrop: 'static', keyboard: false});
+	$('#deleteFileId').val(fileId);
+	$('#deleteFileModalFilename').text(fileId);
+});
+
+$('#deleteFileModalOkNoReset').click(function() {
+	var fileId = $(this).data('forfileid');
+	$('#deleteFileModal').find('button').attr('disabled', 'disabled');
+});
+
+$('#publishModalOk').click(function() {
+	var fileId = $(this).data('forfileid');
+	$('#deleteFileModal').find('button').attr('disabled', 'disabled');
+});
 </script>
 
 {% endblock %}
