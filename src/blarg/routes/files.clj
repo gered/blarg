@@ -16,13 +16,17 @@
                        :tree (files/get-tree)})))
 
 (defn handle-new-file [path file]
-  (let [p (ensure-prefix-suffix path "/")]
-    (if-let [newfile (files/add-file p
-                     (:filename file)
-                     (:tempfile file)
-                     (:content-type file))]
-    (resp/redirect (str "/listfiles" p))
-    (throw (Exception. "Error uploading file")))))
+  (let [p (ensure-prefix-suffix path "/")
+        filename (:filename file)
+        tempfile (:tempfile file)
+        content-type (:content-type file)
+        id (str p filename)
+        exists? (files/file-exists? id)]
+    (if-let [savedfile (if exists?
+                         (files/update-file id tempfile content-type)
+                         (files/add-file p filename tempfile content-type))]
+      (resp/redirect (str "/listfiles" p))
+      (throw (Exception. "Error uploading file")))))
 
 (defn get-file [path]
   (if-let [file (files/get-file path)]
