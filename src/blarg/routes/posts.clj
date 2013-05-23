@@ -107,7 +107,10 @@
 
 (defroutes posts-routes
   (GET "/" [page] (list-page (parse-int page 0)))
-  (GET "/:year/:month/:day/:slug" [year month day slug] (show-post-page year month day slug))
+  (GET 
+    ["/:year/:month/:day/:slug" :year #"[0-9]{4}" :month #"[0-9]{1,2}" :day #"[0-9]{1,2}" :slug #"(.*)"] 
+    [year month day slug] 
+    (show-post-page year month day slug))
   (restricted GET "/newpost" [] (new-post-page))
   (restricted POST "/newpost" [title tags body] (handle-new-post title tags body))
   (restricted GET "/editpost/:id" [id] (edit-post-page id))
