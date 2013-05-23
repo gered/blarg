@@ -45,13 +45,21 @@
       (couch/get-view "files" "listPaths" {:group true}))))
 
 (defn add-file [path filename file content-type]
-  (let [p (ensure-prefix-suffix path "/")
-        id (str p filename)]
-    (if-let [doc (couch/with-db files
-                   (couch/put-document {:_id id
+  (couch/with-db files
+    (let [p (ensure-prefix-suffix path "/")
+          id (str p filename)]
+      (if-let [doc (couch/put-document {:_id id
                                         :filename filename
                                         :path p
                                         :last_modified_at (get-timestamp)
-                                        :published true}))]
-      (couch/with-db files
+                                        :published true})]
         (couch/put-attachment doc file :filename filename :mime-type content-type)))))
+
+(defn update-file [id file content-type]
+  (couch/with-db files
+    (if-let [doc (couch/get-document id)]
+      (let [filename (:filename doc)
+            attachment (second (first (:_attachments doc)))]
+        (if-let [updated-doc (couch/update-document (-> doc
+                                                      (assoc :last_modified_at (get-timestamp))))]
+          (couch/put-attachment updated-doc file :filename filename :mime-type content-type))))))
