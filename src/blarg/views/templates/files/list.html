@@ -15,7 +15,7 @@
 		</select>
 	</div>
 	<div class="pull-right">
-		<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#newFileModal">Upload New File</a>
+		<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#newFileModal">Upload File</a>
 	</div>
 	<div class="clearfix"></div>
 </div>
@@ -26,7 +26,7 @@
 			<th width="440px">Filename</th>
 			<th width="100px">Size</th>
 			<th width="240px">Last Modified</th>
-			<th width="160px">Actions</th>
+			<th width="160px">&nbsp;</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -38,7 +38,7 @@
 			</td>
 			<td>{{file.size}}</td>
 			<td>{{file.last_modified|to_fulltime}}</td>
-			<td>
+			<td style="text-align: right;"">
 				<a class="btn btn-warning" data-updatefileid="{{file.id}}" href="#">Update</a>
 				<a class="btn btn-danger" data-deletefileid="{{file.id}}" href="#">Delete</a>
 			</td>
@@ -50,7 +50,7 @@
 <div id="newFileModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="newFileModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="newFileModalLabel">Upload New File</h3>
+		<h3 id="newFileModalLabel">Upload File</h3>
 	</div>
 	<form action="{{context}}/uploadfile" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="modal-body">
@@ -66,6 +66,7 @@
 					<input type="file" id="newFile" name="file" placeholder="File" />
 				</div>
 			</div>
+			<p>If a file exists at the selected path with the same filename as the one uploaded it will be updated automatically.</p>
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
