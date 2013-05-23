@@ -5,6 +5,11 @@
   (:require [com.ashafa.clutch :as couch]
             [clojure.java.io :as io]))
 
+(defn file-exists? [file]
+  (let [f (ensure-prefix file "/")]
+    (couch/with-db files
+      (not (zero? (count (couch/get-view "files" "listPublished" {:key f})))))))
+
 (defn get-file [file]
   (let [f (ensure-prefix file "/")]
     (couch/with-db files
