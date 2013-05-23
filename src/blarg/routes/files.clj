@@ -8,21 +8,21 @@
             [noir.response :as resp]))
 
 (defn list-files [path]
-  (layout/render
-    "files/list.html" {:html-title (->html-title [(str "Files in " path)])
-                       :path path
-                       :files (files/list-files path)
-                       :tree (files/get-tree)}))
+  (let [p (ensure-prefix-suffix path "/")]
+    (layout/render
+    "files/list.html" {:html-title (->html-title [(str "Files in " p)])
+                       :path p
+                       :files (files/list-files p)
+                       :tree (files/get-tree)})))
 
 (defn handle-new-file [path file]
-  (println "path: " path ", file: " file)
-  (if-let [newfile (files/add-file 
-                     (ensure-prefix path "/")
+  (let [p (ensure-prefix-suffix path "/")]
+    (if-let [newfile (files/add-file p
                      (:filename file)
                      (:tempfile file)
                      (:content-type file))]
-    (resp/redirect (str "/listfiles" (ensure-prefix path "/")))
-    (throw (Exception. "Error uploading file"))))
+    (resp/redirect (str "/listfiles" p))
+    (throw (Exception. "Error uploading file")))))
 
 (defn get-file [path]
   (if-let [file (files/get-file path)]
@@ -31,6 +31,6 @@
 
 (defroutes files-routes
   (restricted GET "/listfiles" [] (list-files "/"))
-  (restricted GET "/listfiles/*" [*] (list-files (ensure-prefix * "/")))
+  (restricted GET "/listfiles/*" [*] (list-files *))
   (restricted POST "/uploadfile" [path file] (handle-new-file path file))
-  (GET "/files/*" [*] (get-file (ensure-prefix * "/"))))
+  (GET "/files/*" [*] (get-file *)))

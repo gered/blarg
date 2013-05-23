@@ -6,9 +6,10 @@
             [clojure.java.io :as io]))
 
 (defn get-file [file]
-  (couch/with-db files
+  (let [f (ensure-prefix file "/")]
+    (couch/with-db files
     (if-let [file-info (->first-view-value
-                         (couch/get-view "files" "listPublished" {:key file}))]
+                         (couch/get-view "files" "listPublished" {:key f}))]
       (let [id         (:_id file-info)
             attachment (:filename file-info)
             attachment-info (second (first (:_attachments file-info)))
@@ -16,12 +17,13 @@
         (if gz
           (merge 
             {:data gz}
-            attachment-info))))))
+            attachment-info)))))))
 
 (defn list-files [path]
-  (if-let [file-list (->view-values
+  (let [p (ensure-prefix-suffix path "/")]
+    (if-let [file-list (->view-values
                        (couch/with-db files
-                         (couch/get-view "files" "listPublishedByPath" {:key path})))]
+                         (couch/get-view "files" "listPublishedByPath" {:key p})))]
     (map
       (fn [f]
         (let [attachment (second (first (:_attachments f)))]
@@ -30,7 +32,7 @@
            :last_modified (parse-timestamp (:last_modified_at f))
            :content-type (:content_type attachment)
            :size (:length attachment)}))
-      file-list)))
+      file-list))))
 
 (defn get-tree []
   (->view-keys
@@ -38,12 +40,12 @@
       (couch/get-view "files" "listPaths" {:group true}))))
 
 (defn add-file [path filename file content-type]
-  (let [proper-path (ensure-prefix path "/")
-        id (str proper-path filename)]
+  (let [p (ensure-prefix-suffix path "/")
+        id (str p filename)]
     (if-let [doc (couch/with-db files
                    (couch/put-document {:_id id
                                         :filename filename
-                                        :path proper-path
+                                        :path p
                                         :last_modified_at (get-timestamp)
                                         :published true}))]
       (couch/with-db files

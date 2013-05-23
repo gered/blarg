@@ -51,3 +51,11 @@
   (if-not (.startsWith s prefix)
     (str prefix s)
     s))
+
+(defn ensure-suffix [s suffix]
+  (if-not (.endsWith s suffix)
+    (str s suffix)
+    s))
+
+(defn ensure-prefix-suffix [s affix]
+  (ensure-prefix (ensure-suffix s affix) affix))
