@@ -63,3 +63,8 @@
         (if-let [updated-doc (couch/update-document (-> doc
                                                       (assoc :last_modified_at (get-timestamp))))]
           (couch/put-attachment updated-doc file :filename filename :mime-type content-type))))))
+
+(defn delete-file [id]
+  (couch/with-db files
+    (if-let [doc (couch/get-document id)]
+      (couch/delete-document doc))))

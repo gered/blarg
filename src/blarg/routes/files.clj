@@ -28,6 +28,12 @@
       (resp/redirect (str "/listfiles" p))
       (throw (Exception. "Error uploading file")))))
 
+(defn handle-delete-file [file]
+  (let [id (ensure-prefix file "/")]
+    (if-let [deleted (files/delete-file file)]
+      (resp/redirect "/listfiles")
+      (throw (Exception. "Error deleting file")))))
+
 (defn get-file [path]
   (if-let [file (files/get-file path)]
     (resp/content-type (:content_type file) (:data file))
@@ -37,4 +43,5 @@
   (restricted GET "/listfiles" [] (list-files "/"))
   (restricted GET "/listfiles/*" [*] (list-files *))
   (restricted POST "/uploadfile" [path file] (handle-new-file path file))
+  (restricted POST "/deletefile" [file] (handle-delete-file file))
   (GET "/files/*" [*] (get-file *)))
