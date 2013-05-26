@@ -1,6 +1,11 @@
 {% extends "blarg/views/templates/base.html" %}
 
 {% block content %}
+{% ifempty posts %}
+<div>
+	<p class="text-center">There are no posts.</p>
+</div>
+{% else %}
 {% for post in posts %}
 {% include "blarg/views/templates/posts/post.html" %}
 {% endfor %}
@@ -21,4 +26,5 @@
 
 {% include "blarg/views/templates/posts/publishmodal.html" %}
 {% include "blarg/views/templates/posts/deletemodal.html" %}
+{% endifempty %}
 {% endblock %}

@@ -26,7 +26,9 @@
 (defn postcount->pagecount
   ([] (postcount->pagecount (posts/count-posts (auth/logged-in?))))
   ([postcount]
-    (int (math/ceil (/ postcount posts/per-page)))))
+    (if (nil? postcount)
+      0
+      (int (math/ceil (/ postcount posts/per-page))))))
 
 (defn valid-post? [title tags body]
   (vali/rule (vali/has-value? title)
@@ -39,7 +41,7 @@
 
 (defn list-page [page]
   (let [totalpages (postcount->pagecount )
-        lastpage (- totalpages 1)
+        lastpage (make-in-range (- totalpages 1) 0 totalpages)
         currentpage (make-in-range page 0 lastpage)
         offset (* currentpage posts/per-page)]
     (layout/render
