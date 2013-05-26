@@ -36,7 +36,8 @@
              :filename (:filename f)
              :last_modified (parse-timestamp (:last_modified_at f))
              :content-type (:content_type attachment)
-             :size (:length attachment)}))
+             :size (:length attachment)
+             :published (:published f)}))
         file-list))))
 
 (defn get-tree []
