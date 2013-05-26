@@ -4,6 +4,10 @@ body {
     margin-top: 10px;
 }
 
+code, pre {
+	font-family: "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Consolas, "Liberation Mono", Courier, monospace;
+}
+
 .error {
     color: red;
 }
