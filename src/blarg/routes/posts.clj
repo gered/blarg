@@ -50,6 +50,11 @@
                        :atfirstpage (= currentpage 0)
                        :inlist true})))
 
+(defn list-by-tag [tag]
+  (layout/render
+    "posts/listbytag.html" {:posts (posts/list-posts-by-tag (auth/logged-in?) tag)
+                            :tag tag}))
+
 (defn show-post-page [year month day slug]
   (let [date (str year "-" month "-" day)
         post (posts/get-post-by-date-slug date slug)]
@@ -111,6 +116,7 @@
     ["/:year/:month/:day/:slug" :year #"[0-9]{4}" :month #"[0-9]{1,2}" :day #"[0-9]{1,2}" :slug #"(.*)"] 
     [year month day slug] 
     (show-post-page year month day slug))
+  (GET "/tag/:tag" [tag] (list-by-tag tag))
   (restricted GET "/newpost" [] (new-post-page))
   (restricted POST "/newpost" [title tags body] (handle-new-post title tags body))
   (restricted GET "/editpost/:id" [id] (edit-post-page id))

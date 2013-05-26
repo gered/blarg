@@ -1,0 +1,16 @@
+{% extends "blarg/views/templates/base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+	<h2>Posts tagged with: {{tag}}</h2>
+</div>
+
+{% for post in posts %}
+<div class="row table-hover">
+	<div class="span2 muted text-right"><time title="{{post.created_at|to_fulltime}}">{{post.created_at|to_relative}}</time></div>
+	<div class="span9"><a href="{{context}}{{post|post-url}}">{{post.title}}</a></div>
+</div>
+{% endfor %}
+
+{% endblock %}
