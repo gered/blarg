@@ -58,6 +58,11 @@ code, pre {
 	width: 220px;
 }
 
+div.file-list-container {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
 .center {
 	float: none;
 	margin-left: auto;
