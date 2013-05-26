@@ -7,12 +7,13 @@
 </div>
 
 <div>
-	<div class="pull-left">
+	<div class="pull-left form-inline">
 		<select id="tree">
 		{% for folder in tree %}
 		<option{% ifequal folder path %} selected{% endifequal %}>{{folder}}</option>
 		{% endfor %}
 		</select>
+		<a class="btn" href="#" id="tree-selector">Go</a>
 	</div>
 	<div class="pull-right">
 		<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#newFileModal">Upload File</a>
@@ -94,8 +95,14 @@
 </div>
 
 <script type="text/javascript">
-$('#tree').change(function() {
-	window.location.href = '{{context}}/listfiles' + $(this).val();
+$(document).ready(function() {
+	$('#tree').combobox({force_match: false});
+	$('#tree').data('combobox').val('{{path}}');
+});
+
+$('#tree-selector').click(function() {
+	var path = $('#tree').data('combobox').val();
+	window.location.href = '{{context}}/listfiles' + path;
 });
 
 $('a[data-deletefileid]').click(function() {
