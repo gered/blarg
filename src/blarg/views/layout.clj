@@ -2,7 +2,8 @@
   (:use noir.request)
   (:require [clabango.parser :as parser]
             [noir.session :as session]
-            [blarg.views.viewfilters]))
+            [blarg.views.viewfilters]
+            [blarg.views.tags]))
 
 (def template-path "blarg/views/templates/")
 
