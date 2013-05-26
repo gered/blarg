@@ -14,6 +14,9 @@
        "listPaths": {
            "map": "function(doc) {\n  emit(doc.path, null);\n}",
            "reduce": "function(keys, values) {\n  return null;\n}"
+       },
+       "listAllByPath": {
+           "map": "function(doc) {\n  emit(doc.path, doc);\n}"
        }
    }
 }
