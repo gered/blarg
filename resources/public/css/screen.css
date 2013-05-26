@@ -36,7 +36,8 @@ code, pre {
 	padding-bottom: 10px;
 }
 
-.unpublished-post {
+.unpublished-post,
+.unpublished-file {
 	background-color: #e1edff;
 }
 
