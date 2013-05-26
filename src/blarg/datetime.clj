@@ -59,7 +59,6 @@
     (seq? coll)
     (map (fn [m] (date->string m fields)) coll)))
 
-
 (defn ->relative-timestamp
   "Returns a readable string representing the time between the current date
    and the provided one"
@@ -82,3 +81,12 @@
         (> minutes 1) (str minutes " minutes ago")
         (= minutes 1) "1 minute ago"
         :else         "just now"))))
+
+(defn ->nicer-month-year-str
+  "Given a date in 'MM-yyyy' format (numeric month), returns the same date in 
+   'MMM yyyy' format (name of month)"
+  [s]
+  (if-let [date (clj-time.format/parse (clj-time.format/formatter "MM-yyyy") s)]
+    (clj-time.format/unparse (clj-time.format/formatter "MMM yyyy") date)))
+
+

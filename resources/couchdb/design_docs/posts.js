@@ -28,6 +28,12 @@
        },
        "listPublishedPostsByTag": {
            "map": "function(doc) {\n  if (doc.type === \"post\" && doc.published === true) {\n    for (var i = 0; i < doc.tags.length; ++i) {\n      var post = {created_at: doc.created_at,\n                  slug: doc.slug,\n                  title: doc.title};\n      emit(doc.tags[i], post)\n    }\n  }\n}"
+       },
+       "listPublishedPostsArchive": {
+           "map": "function(doc) {\n  if (doc.type === \"post\" && doc.published === true) {\n    var date = new Date(doc.created_at)\n    var monthYearStr = (date.getMonth() + 1) + \"-\" + date.getFullYear();\n    var post = {mmyyyy: monthYearStr,\n                created_at: doc.created_at,\n                slug: doc.slug,\n                title: doc.title};\n    emit(doc.created_at, post)\n  }\n}"
+       },
+       "listPostsArchive": {
+           "map": "function(doc) {\n  if (doc.type === \"post\") {\n    var date = new Date(doc.created_at)\n    var monthYearStr = (date.getMonth() + 1) + \"-\" + date.getFullYear();\n    var post = {mmyyyy: monthYearStr,\n                created_at: doc.created_at,\n                slug: doc.slug,\n                title: doc.title};\n    emit(doc.created_at, post)\n  }\n}"
        }
    }
 }

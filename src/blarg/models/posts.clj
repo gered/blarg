@@ -91,6 +91,16 @@
       ;TODO: look into couchdb partial key matching to do this sort at the DB
       (sort-by :created_at clj-time.core/after? posts))))
 
+(defn list-posts-archive [unpublished?]
+  (let [view-name (if unpublished? "listPostsArchive" "listPublishedPostsArchive")]
+    (if-let [posts (->post-list
+                     (couch/with-db posts
+                       (couch/get-view "posts" view-name {:descending true})))]
+      (group-by
+        (fn [p]
+          (->nicer-month-year-str (:mmyyyy p)))
+        posts))))
+
 (defn count-posts
   [unpublished?]
   (->first-view-value
