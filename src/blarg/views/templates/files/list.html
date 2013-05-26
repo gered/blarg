@@ -60,20 +60,15 @@
 		<h3 id="newFileModalLabel">Upload File</h3>
 	</div>
 	<form action="{{context}}/uploadfile" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<input type="hidden" id="newPath" name="path" value="{{path}}" />
 		<div class="modal-body">
-			<div class="control-group">
-				<label class="control-label" for="newPath">Path</label>
-				<div class="controls">
-					<input type="text" id="newPath" name="path" value="{{path}}" />
-				</div>
-			</div>
 			<div class="control-group">
 				<label class="control-label" for="newFile">Upload File</label>
 				<div class="controls">
 					<input type="file" id="newFile" name="file" placeholder="File" />
 				</div>
 			</div>
-			<p>If a file exists at the selected path with the same filename as the one uploaded it will be updated automatically.</p>
+			<p>If a file exists in this directory with the same filename as the one uploaded it will be updated automatically.</p>
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
