@@ -52,8 +52,14 @@
 				<td>{{file.size}}</td>
 				<td>{{file.last_modified|to_fulltime}}</td>
 				<td style="text-align: right;">
-					<a class="btn btn-warning" data-updatefileid="{{file.id}}" href="#">Update</a>
-					<a class="btn btn-danger" data-deletefileid="{{file.id}}" href="#">Delete</a>
+					<a class="btn btn-warning" data-updatefileid="{{file.id}}" href="#"><i class="icon-pencil"></i></a>
+					{% if file.published %}
+					<a class="btn btn-warning" href="{{context}}/unpublishfile{{file.id}}"><i class="icon-minus-sign"></i></a>
+					{% endif %}
+					{% if not file.published %}
+					<a class="btn btn-warning" href="{{context}}/publishfile{{file.id}}"><i class="icon-ok-sign"></i></a>
+					{% endif %}
+					<a class="btn btn-danger" data-deletefileid="{{file.id}}" href="#"><i class="icon-remove"></i></a>
 				</td>
 			</tr>
 			{% endfor %}
