@@ -25,5 +25,8 @@
 (deftemplatefilter "to_relative" [node body arg]
   (->relative-timestamp body))
 
+(deftemplatefilter "to_month-day" [node body arg]
+  (->month-day-str body))
+
 (deftemplatefilter "to_fulltime" [node body arg]
   (clj-time.local/format-local-time body :rfc822))

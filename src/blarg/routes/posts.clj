@@ -55,6 +55,10 @@
     "posts/listbytag.html" {:posts (posts/list-posts-by-tag (auth/logged-in?) tag)
                             :tag tag}))
 
+(defn list-archive []
+  (layout/render
+    "posts/listarchive.html" {:months (posts/list-posts-archive (auth/logged-in?))}))
+
 (defn show-post-page [year month day slug]
   (let [date (str year "-" month "-" day)
         post (posts/get-post-by-date-slug date slug)]
@@ -117,6 +121,7 @@
     [year month day slug] 
     (show-post-page year month day slug))
   (GET "/tag/:tag" [tag] (list-by-tag tag))
+  (GET "/archive" [] (list-archive))
   (restricted GET "/newpost" [] (new-post-page))
   (restricted POST "/newpost" [title tags body] (handle-new-post title tags body))
   (restricted GET "/editpost/:id" [id] (edit-post-page id))

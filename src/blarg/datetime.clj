@@ -82,6 +82,14 @@
         (= minutes 1) "1 minute ago"
         :else         "just now"))))
 
+(defn ->month-day-str
+  "Returns a date string in the format 'MMM d' from the given date object or 
+   string timestamp"
+  [date]
+  (if (string? date)
+    (->month-day-str (clj-time.local/to-local-date-time date))
+    (clj-time.format/unparse (clj-time.format/formatter "MMM d") date)))
+
 (defn ->nicer-month-year-str
   "Given a date in 'MM-yyyy' format (numeric month), returns the same date in 
    'MMM yyyy' format (name of month)"
