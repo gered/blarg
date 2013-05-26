@@ -22,6 +22,12 @@
        "countPosts": {
            "map": "function(doc) {\n  if (doc.type === \"post\") {\n    emit(\"any post\", 1)\n  }\n}",
            "reduce": "function(keys, values) {\n  return sum(values);\n}"
+       },
+       "listPostsByTag": {
+           "map": "function(doc) {\n  if (doc.type === \"post\") {\n    for (var i = 0; i < doc.tags.length; ++i) {\n      var post = {created_at: doc.created_at,\n                  slug: doc.slug,\n                  title: doc.title};\n      emit(doc.tags[i], post)\n    }\n  }\n}"
+       },
+       "listPublishedPostsByTag": {
+           "map": "function(doc) {\n  if (doc.type === \"post\" && doc.published === true) {\n    for (var i = 0; i < doc.tags.length; ++i) {\n      var post = {created_at: doc.created_at,\n                  slug: doc.slug,\n                  title: doc.title};\n      emit(doc.tags[i], post)\n    }\n  }\n}"
        }
    }
 }

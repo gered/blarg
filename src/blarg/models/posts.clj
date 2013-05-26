@@ -82,6 +82,15 @@
         (couch/with-db posts
           (couch/get-view "posts" viewName params))))))
 
+(defn list-posts-by-tag [unpublished? tag]
+  (let [view-name (if unpublished? "listPostsByTag" "listPublishedPostsByTag")]
+    (if-let [posts (->post-list
+                     (couch/with-db posts
+                       (couch/get-view "posts" view-name {:key tag
+                                                          :descending true})))]
+      ;TODO: look into couchdb partial key matching to do this sort at the DB
+      (sort-by :created_at clj-time.core/after? posts))))
+
 (defn count-posts
   [unpublished?]
   (->first-view-value
