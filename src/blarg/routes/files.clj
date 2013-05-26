@@ -5,7 +5,12 @@
         [blarg.util])
   (:require [blarg.views.layout :as layout]
             [blarg.models.files :as files]
-            [noir.response :as resp]))
+            [noir.response :as resp]
+            [noir.session :as session]))
+
+(defn valid-upload? [file]
+  (and (not (nil? file))
+       (not-empty (:filename file))))
 
 (defn list-files [path]
   (let [p (ensure-prefix-suffix path "/")]
@@ -13,26 +18,33 @@
     "files/list.html" {:html-title (->html-title [(str "Files in " p)])
                        :path p
                        :files (files/list-files p)
-                       :tree (files/get-tree)})))
+                       :tree (files/get-tree)
+                       :error (session/flash-get :file-error)
+                       :success (session/flash-get :file-success)
+                       :notice (session/flash-get :file-notice)})))
 
 (defn handle-new-file [path file]
-  (let [p (ensure-prefix-suffix path "/")
-        filename (:filename file)
-        tempfile (:tempfile file)
-        content-type (:content-type file)
-        id (str p filename)
-        exists? (files/file-exists? id)]
-    (if-let [savedfile (if exists?
-                         (files/update-file id tempfile content-type)
-                         (files/add-file p filename tempfile content-type))]
-      (resp/redirect (str "/listfiles" p))
-      (throw (Exception. "Error uploading file")))))
+  (if (valid-upload? file)
+    (let [filename (:filename file)
+          tempfile (:tempfile file)
+          content-type (:content-type file)
+          id (str path filename)
+          exists? (files/file-exists? id)]
+      (if-let [savedfile (if exists?
+                           (files/update-file id tempfile content-type)
+                           (files/add-file path filename tempfile content-type))]
+        (do
+          (session/flash-put! :file-success "File uploaded successfully.")
+          (session/flash-put! :file-notice "Existing file with the same name was updated with the uploaded file."))
+        (session/flash-put! :file-error "File could not be uploaded.")))
+    (session/flash-put! :file-error "No file selected to upload."))
+  (resp/redirect (str "/listfiles" path)))
 
 (defn handle-delete-file [file]
-  (let [id (ensure-prefix file "/")]
-    (if-let [deleted (files/delete-file file)]
-      (resp/redirect "/listfiles")
-      (throw (Exception. "Error deleting file")))))
+  (if-let [deleted (files/delete-file file)]
+    (session/flash-put! :file-success "File was deleted successfully.")
+    (session/flash-put! :file-error "File could not be deleted."))
+  (resp/redirect "/listfiles"))
 
 (defn get-file [path]
   (if-let [file (files/get-file path)]
@@ -42,6 +54,6 @@
 (defroutes files-routes
   (restricted GET "/listfiles" [] (list-files "/"))
   (restricted GET "/listfiles/*" [*] (list-files *))
-  (restricted POST "/uploadfile" [path file] (handle-new-file path file))
-  (restricted POST "/deletefile" [file] (handle-delete-file file))
+  (restricted POST "/uploadfile" [path file] (handle-new-file (ensure-prefix-suffix path "/") file))
+  (restricted POST "/deletefile" [file] (handle-delete-file (ensure-prefix file "/")))
   (GET "/files/*" [*] (get-file *)))

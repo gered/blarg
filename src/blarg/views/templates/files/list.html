@@ -6,6 +6,16 @@
 	<h2>Index of {{path}}</h2>
 </div>
 
+{% if success %}
+<div class="alert alert-success">{{success}}</div>
+{% endif %}
+{% if error %}
+<div class="alert alert-error">{{error}}</div>
+{% endif %}
+{% if notice %}
+<div class="alert alert-info">{{notice}}</div>
+{% endif %}
+
 <div>
 	<div class="pull-left form-inline">
 		<select id="tree">
