@@ -7,7 +7,7 @@
 </div>
 
 {% for post in posts %}
-<div class="row table-hover">
+<div class="row">
 	<div class="span2 muted text-right"><time title="{{post.created_at|to_fulltime}}">{{post.created_at|to_relative}}</time></div>
 	<div class="span9"><a href="{{context}}{{post|post-url}}">{{post.title}}</a></div>
 </div>
