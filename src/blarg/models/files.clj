@@ -69,9 +69,9 @@
     (if-let [doc (couch/get-document id)]
       (couch/delete-document doc))))
 
-(defn publish-file [id published?]
+(defn publish-file [id publish?]
   (couch/with-db files
     (if-let [doc (couch/get-document id)]
       (couch/update-document (-> doc
                                (assoc :last_modified_at (get-timestamp))
-                               (assoc :published published?))))))
+                               (assoc :published publish?))))))
