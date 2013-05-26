@@ -66,13 +66,15 @@
           (couch/put-attachment updated-doc file :filename filename :mime-type content-type))))))
 
 (defn delete-file [id]
-  (couch/with-db files
-    (if-let [doc (couch/get-document id)]
-      (couch/delete-document doc))))
+  (let [safe-id (ensure-prefix id "/")]
+    (couch/with-db files
+      (if-let [doc (couch/get-document safe-id)]
+        (couch/delete-document doc)))))
 
 (defn publish-file [id publish?]
-  (couch/with-db files
-    (if-let [doc (couch/get-document id)]
-      (couch/update-document (-> doc
-                               (assoc :last_modified_at (get-timestamp))
-                               (assoc :published publish?))))))
+  (let [safe-id (ensure-prefix id "/")]
+    (couch/with-db files
+      (if-let [doc (couch/get-document safe-id)]
+        (couch/update-document (-> doc
+                                 (assoc :last_modified_at (get-timestamp))
+                                 (assoc :published publish?)))))))
