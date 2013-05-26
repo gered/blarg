@@ -43,6 +43,9 @@
 (defn handle-delete-file [file]
   (if-let [deleted (files/delete-file file)]
     (session/flash-put! :file-success (str "<strong>" file "</strong> was deleted successfully."))
+(defn handle-delete-file [id]
+  (if-let [deleted (files/delete-file id)]
+    (session/flash-put! :file-success (str "<strong>" id "</strong> was deleted successfully."))
     (session/flash-put! :file-error "File could not be deleted."))
   (resp/redirect "/listfiles"))
 
