@@ -35,7 +35,7 @@
                            (files/add-file path filename tempfile content-type))]
         (do
           (session/flash-put! :file-success (str "<strong>" (:id savedfile) "</strong> was uploaded successfully."))
-          (session/flash-put! :file-notice "Existing file with the same name was updated with the uploaded file."))
+          (if exists? (session/flash-put! :file-notice "Existing file with the same name was updated with the uploaded file.")))
         (session/flash-put! :file-error "File could not be uploaded.")))
     (session/flash-put! :file-error "No file selected to upload."))
   (resp/redirect (str "/listfiles" path)))
