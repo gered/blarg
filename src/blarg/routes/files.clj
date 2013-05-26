@@ -56,6 +56,12 @@
     (session/flash-put! :file-error "File could not be deleted."))
   (resp/redirect "/listfiles"))
 
+(defn handle-publish-file [id]
+  (if-let [published (files/publish-file id)]
+    (session/flash-put! :file-success (str "<strong>" id "</strong> was " (if (:published published) "published" "unpublished") " successfully."))
+    (session/flash-put! :file-error "Could not update file's published state."))
+  (resp/redirect "/listfiles"))
+
 (defn get-file [path]
   (if-let [file (files/get-file path)]
     (resp/content-type (:content_type file) (:data file))
@@ -67,4 +73,6 @@
   (restricted POST "/uploadfile" [path file] (handle-new-file (ensure-prefix-suffix path "/") file))
   (restricted POST "/updatefile" [id file] (handle-update-file (ensure-prefix id "/") file))
   (restricted POST "/deletefile" [id] (handle-delete-file (ensure-prefix id "/")))
+  (restricted GET "/publishfile/:id" [id] (handle-publish-file id true))
+  (restricted GET "/unpublishfile/:id" [id] (handle-publish-file id false))
   (GET "/files/*" [*] (get-file *)))
