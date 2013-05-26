@@ -5,6 +5,7 @@
         [blarg.util])
   (:require [blarg.views.layout :as layout]
             [blarg.models.files :as files]
+            [blarg.routes.auth :as auth]
             [noir.response :as resp]
             [noir.session :as session]))
 
@@ -63,7 +64,7 @@
   (resp/redirect "/listfiles"))
 
 (defn get-file [path]
-  (if-let [file (files/get-file path)]
+  (if-let [file (files/get-file path (auth/logged-in?))]
     (resp/content-type (:content_type file) (:data file))
     (resp/status 404 nil)))
 
