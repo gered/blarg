@@ -87,6 +87,30 @@
 	</form>
 </div>
 
+<div id="updateFileModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="updateFileModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="updateFileModalLabel">Update File</h3>
+	</div>
+	<form action="{{context}}/updatefile" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<input type="hidden" id="updateFileId" name="id" />
+		<div class="modal-body">
+			<p>Select a file to upload over top of this file with:</p> 
+			<p><strong id="updateFileModalFilename"></strong></p>
+			<div class="control-group">
+				<label class="control-label" for="updateFile">Upload File</label>
+				<div class="controls">
+					<input type="file" id="updateFile" name="file" placeholder="File" />
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button type="submit" class="btn btn-primary">Upload</button>
+		</div>
+	</form>
+</div>
+
 <div id="deleteFileModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteFileModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -116,25 +140,22 @@ $('#tree-selector').click(function() {
 	window.location.href = '{{context}}/listfiles' + path;
 });
 
+$('a[data-updatefileid]').click(function() {
+	var fileId = $(this).data('updatefileid');
+
+	$('#updateFileModal').modal({backdrop: 'static', keyboard: false});
+	$('#updateFileId').val(fileId);
+	$('#updateFileModalFilename').text(fileId);
+});
+
 $('a[data-deletefileid]').click(function() {
 	var fileId = $(this).data('deletefileid');
 
-	$('#deleteFileModalOkNoReset').data('forfileid', fileId);
-	$('#deleteFileModalOk').data('forfileid', fileId);
 	$('#deleteFileModal').modal({backdrop: 'static', keyboard: false});
 	$('#deleteFileId').val(fileId);
 	$('#deleteFileModalFilename').text(fileId);
 });
 
-$('#deleteFileModalOkNoReset').click(function() {
-	var fileId = $(this).data('forfileid');
-	$('#deleteFileModal').find('button').attr('disabled', 'disabled');
-});
-
-$('#publishModalOk').click(function() {
-	var fileId = $(this).data('forfileid');
-	$('#deleteFileModal').find('button').attr('disabled', 'disabled');
-});
 </script>
 
 {% endblock %}

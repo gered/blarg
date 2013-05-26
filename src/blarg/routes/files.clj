@@ -40,6 +40,16 @@
     (session/flash-put! :file-error "No file selected to upload."))
   (resp/redirect (str "/listfiles" path)))
 
+(defn handle-update-file [id file]
+  (if (valid-upload? file)
+    (let [tempfile (:tempfile file)
+          content-type (:content-type file)]
+      (if-let [updatedfile (files/update-file id tempfile content-type)]
+        (session/flash-put! :file-success (str "<strong>" id "</strong> was updated successfully."))
+        (session/flash-put! :file-error "File could not be updated.")))
+    (session/flash-put! :file-error "No file selected to upload."))
+  (resp/redirect (str "/listfiles")))
+
 (defn handle-delete-file [id]
   (if-let [deleted (files/delete-file id)]
     (session/flash-put! :file-success (str "<strong>" id "</strong> was deleted successfully."))
@@ -55,5 +65,6 @@
   (restricted GET "/listfiles" [] (list-files "/"))
   (restricted GET "/listfiles/*" [*] (list-files *))
   (restricted POST "/uploadfile" [path file] (handle-new-file (ensure-prefix-suffix path "/") file))
+  (restricted POST "/updatefile" [id file] (handle-update-file (ensure-prefix id "/") file))
   (restricted POST "/deletefile" [id] (handle-delete-file (ensure-prefix id "/")))
   (GET "/files/*" [*] (get-file *)))
