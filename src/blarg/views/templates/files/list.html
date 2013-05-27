@@ -52,14 +52,14 @@
 				<td>{{file.size}}</td>
 				<td>{{file.last_modified|to_fulltime}}</td>
 				<td style="text-align: right;">
-					<a class="btn btn-warning" data-updatefileid="{{file.id}}" href="#"><i class="icon-pencil icon-white"></i></a>
+					<a class="btn btn-warning" title="Update File" data-updatefileid="{{file.id}}" href="#"><i class="icon-pencil icon-white"></i></a>
 					{% if file.published %}
-					<a class="btn btn-warning" href="{{context}}/unpublishfile{{file.id}}"><i class="icon-minus-sign icon-white"></i></a>
+					<a class="btn btn-warning" title="Unpublish File" href="{{context}}/unpublishfile{{file.id}}"><i class="icon-minus-sign icon-white"></i></a>
 					{% endif %}
 					{% if not file.published %}
-					<a class="btn btn-warning" href="{{context}}/publishfile{{file.id}}"><i class="icon-ok-sign icon-white"></i></a>
+					<a class="btn btn-success" title="Publish File" href="{{context}}/publishfile{{file.id}}"><i class="icon-ok-sign icon-white"></i></a>
 					{% endif %}
-					<a class="btn btn-danger" data-deletefileid="{{file.id}}" href="#"><i class="icon-remove icon-white"></i></a>
+					<a class="btn btn-danger" title="Delete File" data-deletefileid="{{file.id}}" href="#"><i class="icon-remove icon-white"></i></a>
 				</td>
 			</tr>
 			{% endfor %}
