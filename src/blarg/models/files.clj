@@ -56,7 +56,7 @@
                                         :filename filename
                                         :path p
                                         :last_modified_at (get-timestamp)
-                                        :published true})]
+                                        :published false})]
         (couch/put-attachment doc file :filename filename :mime-type content-type)))))
 
 (defn update-file [id file content-type]
