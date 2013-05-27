@@ -14,7 +14,8 @@
                  [slugger "1.0.1"]
                  [clj-time "0.5.0"]
                  [org.clojure/math.numeric-tower "0.0.2"]
-                 [cheshire "5.1.2"]]
+                 [cheshire "5.1.2"]
+                 [clj-rss "0.1.3"]]
   :plugins [[lein-ring "0.8.5"]]
   :ring {:handler blarg.handler/war-handler
          :init    blarg.handler/init

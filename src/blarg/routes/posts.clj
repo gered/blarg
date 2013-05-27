@@ -4,8 +4,7 @@
         [noir.util.route]
         [blarg.util]
         [blarg.routes.helpers])
-  (:require [clj-time.core]
-            [clojure.math.numeric-tower :as math]
+  (:require [clojure.math.numeric-tower :as math]
             [noir.response :as resp]
             [noir.validation :as vali]
             [noir.session :as session]
