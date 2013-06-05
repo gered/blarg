@@ -22,9 +22,19 @@ code, pre {
 .content[role="main"] > div,
 .content[role="main"] > ul, 
 .content[role="main"] > p,
+.content[role="main"] > h1,
+.content[role="main"] > h2,
+.content[role="main"] > h3,
+.content[role="main"] > h4,
 .content[role="main"] > form {
 	padding-left: 10px;
 	padding-right: 10px;
+}
+
+.footer {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-top: 1px solid #eee;
 }
 
 .label a {
