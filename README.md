@@ -1,19 +1,5 @@
 # blarg
 
-FIXME
+A custom blog engine for my personal website, located at http://www.blarg.ca/
 
-## Prerequisites
-
-You will need [Leiningen][1] 2.0 or above installed.
-
-[1]: https://github.com/technomancy/leiningen
-
-## Running
-
-To start a web server for the application, run:
-
-    lein ring server
-
-## License
-
-Copyright © 2013 FIXME
+Built with [Clojure](http://clojure.org/), [Luminus](http://www.luminusweb.net/), and [CouchDB](http://couchdb.apache.org/).
