@@ -7,6 +7,7 @@
         blarg.routes.accessrules
         compojure.core)
   (:require [noir.util.middleware :as middleware]
+            [noir.response :as resp]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
             [com.postspectacular.rotor :as rotor]
@@ -16,9 +17,6 @@
 (defroutes app-routes
   (route/resources "/")
   (route/not-found "Not Found"))
-
-(defn destroy []
-  (timbre/info "picture-gallery is shutting down"))
 
 (defn init
   "init will be called once when
@@ -49,13 +47,21 @@
   []
   (timbre/info "blarg is shutting down..."))
 
-;;append your application routes to the all-routes vector
-(def all-routes [auth-routes home-routes posts-routes files-routes rss-routes app-routes])
+(defn wrap-exceptions [app]
+  (fn [request]
+    (try
+      (app request)
+      (catch Exception e
+        (.printStackTrace e)
+        (->> (layout/render "error.html" {:error-info e})
+             (resp/status 500))))))
 
-(def app (-> all-routes
-             (middleware/app-handler)
-             (middleware/wrap-access-rules {:redirect "/unauthorized"} auth-required)
-             ;;add your middlewares here
-             ))
+;;append your application routes to the all-routes vector
+(def all-routes [auth-routes home-routes posts-routes files-routes rss-routes])
+
+(def app (middleware/app-handler
+           (conj all-routes app-routes)
+           :middleware [wrap-exceptions]
+           :access-rules [[{:redirect "/unauthorized"} auth-required]]))
 
 (def war-handler (middleware/war-handler app))
