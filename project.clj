@@ -2,14 +2,14 @@
   :description "webapp for http://blarg.ca/"
   :url "http://blarg.ca/"
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [lib-noir "0.5.4"]
+                 [lib-noir "0.6.0"]
                  [compojure "1.1.5"]
                  [ring-server "0.2.8"]
                  [clabango "0.5"]
                  [com.taoensso/timbre "1.6.0"]
                  [com.postspectacular/rotor "0.1.0"]
                  [com.taoensso/tower "1.5.1"]
-                 [markdown-clj "0.9.19"]
+                 [markdown-clj "0.9.26"]
                  [com.ashafa/clutch "0.4.0-RC1"]
                  [slugger "1.0.1"]
                  [clj-time "0.5.0"]
