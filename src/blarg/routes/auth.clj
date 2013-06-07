@@ -30,8 +30,12 @@
   (session/clear!)
   (resp/redirect "/"))
 
+(defn handle-unauthorized []
+  (->> (layout/render "unauthorized.html")
+       (resp/status 401)))
+
 (defroutes auth-routes
-  (GET "/unauthorized" [] "Unauthorized.")
+  (GET "/unauthorized" [] (handle-unauthorized))
   (GET "/login" [] (login-page))
   (POST "/login" [id pass] (handle-login id pass))
   (GET "/logout" [] (logout))
