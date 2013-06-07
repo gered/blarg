@@ -5,6 +5,7 @@
         blarg.routes.files
         blarg.routes.rss
         blarg.routes.accessrules
+        ring.middleware.head
         compojure.core)
   (:require [noir.util.middleware :as middleware]
             [noir.response :as resp]
@@ -16,7 +17,10 @@
 
 (defroutes app-routes
   (route/resources "/")
-  (route/not-found "Not Found"))
+  (wrap-head
+    (fn [request]
+      (->> (layout/render "notfound.html")
+           (resp/status 404)))))
 
 (defn init
   "init will be called once when
