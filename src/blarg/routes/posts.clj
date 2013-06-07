@@ -61,7 +61,7 @@
     "posts/listarchive.html" {:months (posts/list-posts-archive (auth/logged-in?))}))
 
 (defn show-post-page [year month day slug]
-  (let [date (str year "-" month "-" day)
+  (let [date (str (string->int year) "-" (string->int month) "-" (string->int day))
         post (posts/get-post-by-date-slug date slug)]
     (if (not-empty post)
       (layout/render
