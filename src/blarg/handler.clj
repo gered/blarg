@@ -19,8 +19,9 @@
   (route/resources "/")
   (wrap-head
     (fn [request]
-      (->> (layout/render "notfound.html")
-           (resp/status 404)))))
+      {:status 404
+       :headers {"Content-Type" "text/html"}
+       :body (layout/render "notfound.html")})))
 
 (defn init
   "init will be called once when
@@ -57,8 +58,9 @@
       (app request)
       (catch Exception e
         (.printStackTrace e)
-        (->> (layout/render "error.html" {:error-info e})
-             (resp/status 500))))))
+        {:status 500
+         :headers {"Content-Type" "text/html"}
+         :body (layout/render "error.html" {:error-info e})}))))
 
 ;;append your application routes to the all-routes vector
 (def all-routes [auth-routes home-routes posts-routes files-routes rss-routes])

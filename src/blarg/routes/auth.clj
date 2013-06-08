@@ -31,8 +31,9 @@
   (resp/redirect "/"))
 
 (defn handle-unauthorized []
-  (->> (layout/render "unauthorized.html")
-       (resp/status 401)))
+  {:status 401
+   :headers {"Content-Type" "text/html"}
+   :body (layout/render "unauthorized.html")})
 
 (defroutes auth-routes
   (GET "/unauthorized" [] (handle-unauthorized))
