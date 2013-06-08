@@ -66,7 +66,7 @@
 (defn get-file [path]
   (if-let [file (files/get-file path (auth/logged-in?))]
     (resp/content-type (:content_type file) (:data file))
-    (resp/status 404 nil)))
+    (resp/redirect "/notfound")))
 
 (defroutes files-routes
   (restricted GET "/listfiles" [] (list-files "/"))
