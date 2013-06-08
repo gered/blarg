@@ -54,10 +54,10 @@
 				<td style="text-align: right;">
 					<a class="btn btn-warning" title="Update File" data-updatefileid="{{file.id}}" href="#"><i class="icon-pencil icon-white"></i></a>
 					{% if file.published %}
-					<a class="btn btn-warning" title="Unpublish File" href="{{context}}/unpublishfile{{file.id}}"><i class="icon-minus-sign icon-white"></i></a>
+					<a class="btn btn-warning" title="Unpublish File" href="{{context}}/unpublishfile{{file.id}}?returnpath={{path}}"><i class="icon-minus-sign icon-white"></i></a>
 					{% endif %}
 					{% if not file.published %}
-					<a class="btn btn-success" title="Publish File" href="{{context}}/publishfile{{file.id}}"><i class="icon-ok-sign icon-white"></i></a>
+					<a class="btn btn-success" title="Publish File" href="{{context}}/publishfile{{file.id}}?returnpath={{path}}"><i class="icon-ok-sign icon-white"></i></a>
 					{% endif %}
 					<a class="btn btn-danger" title="Delete File" data-deletefileid="{{file.id}}" href="#"><i class="icon-remove icon-white"></i></a>
 				</td>
@@ -75,7 +75,7 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="newFileModalLabel">Upload File</h3>
 	</div>
-	<form action="{{context}}/uploadfile" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{{context}}/uploadfile?returnpath={{path}}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<input type="hidden" id="newPath" name="path" value="{{path}}" />
 		<div class="modal-body">
 			<div class="control-group">
@@ -98,7 +98,7 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="updateFileModalLabel">Update File</h3>
 	</div>
-	<form action="{{context}}/updatefile" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{{context}}/updatefile?returnpath={{path}}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<input type="hidden" id="updateFileId" name="id" />
 		<div class="modal-body">
 			<p>Select a file to upload over top of this file with:</p> 
@@ -122,7 +122,7 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="deleteFileModalLabel">Delete File</h3>
 	</div>
-	<form action="{{context}}/deletefile" method="post" class="form-horizontal">
+	<form action="{{context}}/deletefile?returnpath={{path}}" method="post" class="form-horizontal">
 		<input type="hidden" id="deleteFileId" name="id" />
 		<div class="modal-body">
 			<p>Confirm that you would like to delete the following file:</p>
