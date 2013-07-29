@@ -1,9 +1,8 @@
 (ns blarg.views.layout
   (:use noir.request)
-  (:require [clabango.parser :as parser]
+  (:require [selmer.parser :as parser]
             [noir.session :as session]
-            [blarg.views.viewfilters]
-            [blarg.views.tags]))
+            [blarg.views.viewfilters]))
 
 (def template-path "blarg/views/templates/")
 

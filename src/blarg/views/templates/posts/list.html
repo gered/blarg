@@ -1,7 +1,7 @@
 {% extends "blarg/views/templates/base.html" %}
 
 {% block content %}
-{% ifempty posts %}
+{% if not posts %}
 <div>
 	<p class="text-center">There are no posts.</p>
 </div>
@@ -26,5 +26,5 @@
 
 {% include "blarg/views/templates/posts/publishmodal.html" %}
 {% include "blarg/views/templates/posts/deletemodal.html" %}
-{% endifempty %}
+{% endif %}
 {% endblock %}

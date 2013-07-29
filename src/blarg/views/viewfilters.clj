@@ -1,32 +1,32 @@
 (ns blarg.views.viewfilters
   (:use [blarg.datetime]
         [blarg.routes.helpers])
-  (:require [clabango.filters :refer [deftemplatefilter]]
+  (:require [selmer.filters :refer [add-filter!]]
             [markdown.core :as md]
             [clj-time.core]
             [clj-time.format]))
 
-(deftemplatefilter "is_false" [node body arg]
-  (if body
-    false
-    true))
+(add-filter!
+  :md-to-html
+  (fn [s]
+    (md/md-to-html-string s)))
 
-(deftemplatefilter "default" [node body arg]
-  (if body
-    body
-    arg))
+(add-filter!
+  :post-url
+  (fn [post]
+    (get-post-url post)))
 
-(deftemplatefilter "md-to-html" [node body arg]
-  (md/md-to-html-string body))
+(add-filter!
+  :to_relative
+  (fn [date]
+    (->relative-timestamp date)))
 
-(deftemplatefilter "post-url" [node body arg]
-  (get-post-url body))
+(add-filter!
+  :to_month-day
+  (fn [date]
+    (->month-day-str date)))
 
-(deftemplatefilter "to_relative" [node body arg]
-  (->relative-timestamp body))
-
-(deftemplatefilter "to_month-day" [node body arg]
-  (->month-day-str body))
-
-(deftemplatefilter "to_fulltime" [node body arg]
-  (clj-time.local/format-local-time body :rfc822))
+(add-filter!
+  :to_fulltime
+  (fn [date]
+    (clj-time.local/format-local-time date :rfc822)))
