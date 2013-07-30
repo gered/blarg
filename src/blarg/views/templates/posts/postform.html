@@ -25,13 +25,13 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	var allTags = {{all-tags|to-json}};
+	var allTags = {{all-tags|json|safe}};
 	
 	$("#body").markdown();
 	$("#tags").select2({tags:allTags});
 	$("#tags").on("change", function() { $("#tags_val").html($("#tags").val());});
 	
-	var errors = {{validation-errors|to-json}};
+	var errors = {{validation-errors|json|safe}};
 	for (var field in errors) {
 		var inputElement = $('#' + field);
 		var controlGroup = inputElement.closest('div.control-group');
