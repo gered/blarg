@@ -1,7 +1,8 @@
 {% extends "blarg/views/templates/base.html" %}
 
 {% block content %}
-{% if not posts %}
+
+{% if posts|is-empty %}
 <div>
 	<p class="text-center">There are no posts.</p>
 </div>
