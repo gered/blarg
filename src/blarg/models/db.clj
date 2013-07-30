@@ -1,10 +1,10 @@
 (ns blarg.models.db
   (:use [blarg.util])
-  (:require [blarg.config :as config]
+  (:require [blarg.config :refer [config-val]]
             [com.ashafa.clutch :as couch]))
 
 (defn db-url [db]
-  (let [c    (config/get-db-config)
+  (let [c    (config-val :database)
         url  (:url c)
         user (:user c)
         pass (:pass c)]

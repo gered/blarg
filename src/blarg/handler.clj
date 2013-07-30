@@ -5,6 +5,7 @@
         blarg.routes.files
         blarg.routes.rss
         blarg.routes.accessrules
+        blarg.config
         ring.middleware.head
         compojure.core)
   (:require [noir.util.middleware :as middleware]
@@ -12,6 +13,7 @@
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
             [com.postspectacular.rotor :as rotor]
+            [selmer.parser :as parser]
             [blarg.views.layout :as layout]
             [blarg.models.db :as db]))
 
@@ -42,6 +44,9 @@
     {:path "blarg.log" :max-size 10000 :backlog 10})
   
   (timbre/info "blarg started successfully")
+
+  (if (= "DEV" (config-val :env))
+    (parser/toggle-caching))
   
   (timbre/info "touching database...")
   (db/touch-databases))

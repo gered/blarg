@@ -15,7 +15,8 @@
     (reset! site-config (load-config))
     @site-config))
 
-(defn get-db-config
-  "returns just the database portion of the site configuration"
-  []
-  (:database (get-config)))
+(defn config-val [key]
+  (get (get-config) key))
+
+(defn config-val-in [ks]
+  (get-in (get-config) ks))
