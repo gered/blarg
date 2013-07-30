@@ -8,25 +8,24 @@
 
 (add-filter!
   :md-to-html
-  (fn [s]
-    (md/md-to-html-string s)))
+  #(md/md-to-html-string %))
 
 (add-filter!
   :post-url
-  (fn [post]
-    (get-post-url post)))
+  #(get-post-url %))
 
 (add-filter!
   :to_relative
-  (fn [date]
-    (->relative-timestamp date)))
+  #(->relative-timestamp %))
 
 (add-filter!
   :to_month-day
-  (fn [date]
-    (->month-day-str date)))
+  #(->month-day-str %))
 
 (add-filter!
   :to_fulltime
-  (fn [date]
-    (clj-time.local/format-local-time date :rfc822)))
+  #(clj-time.local/format-local-time % :rfc822))
+
+(add-filter!
+  :is-empty
+  #(empty? %))
