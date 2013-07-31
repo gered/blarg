@@ -20,7 +20,7 @@
                              (couch/get-view "files" view-name {:key f}))]
           (let [id         (:_id file-info)
                 attachment (:filename file-info)
-                attachment-info (second (first (:_attachments file-info)))
+                attachment-info (->> file-info :_attachments first second)
                 gz (couch/get-attachment id attachment)]
             (if gz
               (merge 
@@ -34,7 +34,7 @@
                            (couch/get-view "files" "listAllByPath" {:key p})))]
       (map
         (fn [f]
-          (let [attachment (second (first (:_attachments f)))]
+          (let [attachment (->> f :_attachments first second)]
             {:id (:_id f)
              :filename (:filename f)
              :last_modified (parse-timestamp (:last_modified_at f))

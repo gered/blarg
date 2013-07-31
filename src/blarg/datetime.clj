@@ -32,32 +32,28 @@
   [coll fields]
   (cond
     (map? coll)
-    (merge
-      coll
-      (apply
-        (fn [field]
-          (if-let [timestamp (get coll field)]
-            {field (parse-timestamp timestamp)}))
-        fields))
+    (->> fields
+         (apply
+           #(if-let [timestamp (get coll %)]
+              {% (parse-timestamp timestamp)}))
+         (merge coll))
     
     (seq? coll)
-    (map (fn [m] (string->date m fields)) coll)))
+    (map #(string->date % fields) coll)))
 
 (defn date->string
   "Does the reverse of string->date (converts LocalDate's back to strings)"
   [coll fields]
   (cond
     (map? coll)
-    (merge
-      coll
-      (apply
-        (fn [field]
-          (if-let [date (get coll field)]
-            {field (get-timestamp date)}))
-        fields))
+    (->> fields
+         (apply
+           #(if-let [date (get coll %)]
+              {% (get-timestamp date)}))
+         (merge coll))
     
     (seq? coll)
-    (map (fn [m] (date->string m fields)) coll)))
+    (map #(date->string % fields) coll)))
 
 (defn ->relative-timestamp
   "Returns a readable string representing the time between the current date

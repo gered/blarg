@@ -15,18 +15,17 @@
 (defn handle-rss []
   (let [channel {:title rss-title
                  :link rss-site-url
-                 :description rss-description}
-        items (doall
-                (map
-                  (fn [post]
+                 :description rss-description}]
+    (resp/content-type "text/xml"
+      (apply
+        (partial rss/channel-xml channel)
+        (->> (posts/list-posts false 10)
+             (map (fn [post]
                     {:title (:title post)
                      :pubDate (clj-time.coerce/to-date (:created_at post))
                      :link (str rss-site-url (subs (get-post-url post) 1))
-                     :description (md/md-to-html-string (:body post))})
-                  (posts/list-posts false 10)))]
-    (resp/content-type "text/xml"
-      (apply (partial rss/channel-xml channel)
-        items))))
+                     :description (md/md-to-html-string (:body post))}))
+             (doall))))))
 
 (defroutes rss-routes
     (GET "/rss" [] (handle-rss)))

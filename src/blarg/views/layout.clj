@@ -7,7 +7,8 @@
 (def template-path "blarg/views/templates/")
 
 (defn render [template & [params]]
-  (parser/render-file (str template-path template)
-                      (assoc params 
-                        :context (:context *request*)
-                        :user-id (session/get :user))))
+  (parser/render-file
+    (str template-path template)
+    (assoc params
+      :context (:context *request*)
+      :user-id (session/get :user))))
