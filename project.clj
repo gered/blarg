@@ -16,6 +16,7 @@
                  [clj-time "0.6.0"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [clj-rss "0.1.3"]]
+  :repl-options {:init-ns blarg.repl}
   :plugins [[lein-ring "0.8.10"]
             [lein-environ "0.4.0"]]
   :ring {:handler blarg.handler/war-handler
@@ -26,5 +27,6 @@
                        :stacktraces?  false
                        :auto-reload?  false}}
    :dev {:dependencies [[ring-mock "0.1.5"]
-                        [ring/ring-devel "1.2.1"]]}}
+                        [ring/ring-devel "1.2.1"]]
+         :source-paths ["dev"]}}
   :min-lein-version "2.0.0")
