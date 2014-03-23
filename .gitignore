@@ -5,9 +5,10 @@
 pom.xml
 *.jar
 *.class
-/.lein-*
-/.env
-/*.log
-/.settings
-/.idea
-/*.iml
+.lein-*
+.nrepl-*
+.env
+*.log
+.settings
+.idea
+*.iml
