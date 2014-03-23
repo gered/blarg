@@ -19,11 +19,7 @@
 
 (defroutes app-routes
   (route/resources "/")
-  (wrap-head
-    (fn [request]
-      {:status 404
-       :headers {"Content-Type" "text/html"}
-       :body (layout/render "notfound.html")})))
+  (route/not-found (layout/render "notfound.html")))
 
 (defn init []
   (timbre/set-config!
