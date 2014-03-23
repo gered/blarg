@@ -2,7 +2,7 @@
   (:use [blarg.routes.helpers]
         [compojure.core])
   (:require [markdown.core :as md]
-            [noir.response :as resp]
+            [noir.response :refer [xml]]
             [clj-rss.core :as rss]
             [clj-time.core]
             [clj-time.coerce]
@@ -16,7 +16,7 @@
   (let [channel {:title rss-title
                  :link rss-site-url
                  :description rss-description}]
-    (resp/content-type "text/xml"
+    (xml
       (apply
         (partial rss/channel-xml channel)
         (->> (posts/list-posts false 10)
