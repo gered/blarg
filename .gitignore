@@ -1,3 +1,4 @@
+.DS_Store
 /target
 /lib
 /classes
@@ -9,6 +10,10 @@ pom.xml
 .nrepl-*
 .env
 *.log
-.settings
+.settings/
+.project
+.classpath
 .idea
 *.iml
+*.ipr
+*.iws
