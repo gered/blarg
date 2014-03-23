@@ -8,11 +8,11 @@
         blarg.config
         ring.middleware.head
         compojure.core)
-  (:require [noir.util.middleware :as middleware]
+  (:require [noir.util.middleware :refer [app-handler]]
             [noir.response :as resp]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
-            [com.postspectacular.rotor :as rotor]
+            [taoensso.timbre.appenders.rotor :as rotor]
             [selmer.parser :as parser]
             [blarg.views.layout :as layout]
             [blarg.models.db :as db]))
@@ -25,54 +25,43 @@
        :headers {"Content-Type" "text/html"}
        :body (layout/render "notfound.html")})))
 
-(defn init
-  "init will be called once when
-   app is deployed as a servlet on
-   an app server such as Tomcat
-   put any initialization code here"
-  []
+(defn init []
   (timbre/set-config!
     [:appenders :rotor]
-    {:min-level :info
-     :enabled? true
-     :async? false ; should be always false for rotor
+    {:min-level             :info
+     :enabled?              true
+     :async?                false ; should be always false for rotor
      :max-message-per-msecs nil
-     :fn rotor/append})
+     :fn                    rotor/appender-fn})
   
   (timbre/set-config!
     [:shared-appender-config :rotor]
-    {:path "blarg.log" :max-size 10000 :backlog 10})
+    {:path "blarg.log" :max-size (* 512 1024) :backlog 10})
   
   (timbre/info "blarg started successfully")
 
-  (if (= "DEV" (config-val :env))
+  (when (= "DEV" (config-val :env))
+    (timbre/info "Dev environment. Template caching disabled.")
     (parser/toggle-caching))
   
   (timbre/info "touching database...")
   (db/touch-databases))
 
-(defn destroy
-  "destroy will be called when your application
-   shuts down, put any clean up code here"
-  []
+(defn destroy []
   (timbre/info "blarg is shutting down..."))
 
-(defn wrap-exceptions [app]
+(defn wrap-exceptions [handler]
   (fn [request]
     (try
-      (app request)
-      (catch Exception e
+      (handler request)
+      (catch Throwable e
         (.printStackTrace e)
         {:status 500
          :headers {"Content-Type" "text/html"}
          :body (layout/render "error.html" {:error-info e})}))))
 
-;;append your application routes to the all-routes vector
-(def all-routes [auth-routes home-routes posts-routes files-routes rss-routes])
-
-(def app (middleware/app-handler
-           (conj all-routes app-routes)
+(def app (app-handler
+           [auth-routes home-routes posts-routes files-routes rss-routes app-routes]
            :middleware [wrap-exceptions]
-           :access-rules [[{:redirect "/unauthorized"} auth-required]]))
-
-(def war-handler (middleware/war-handler app))
+           :access-rules [[{:redirect "/unauthorized"} auth-required]]
+           :formats [:json-kw :edn]))

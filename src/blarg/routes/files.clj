@@ -70,11 +70,11 @@
     (resp/redirect "/notfound")))
 
 (defroutes files-routes
-  (restricted GET "/listfiles" [] (list-files "/"))
-  (restricted GET "/listfiles/*" [*] (list-files *))
-  (restricted POST "/uploadfile" [path file returnpath] (handle-new-file (ensure-prefix-suffix path "/") file returnpath))
-  (restricted POST "/updatefile" [id file returnpath] (handle-update-file (ensure-prefix id "/") file returnpath))
-  (restricted POST "/deletefile" [id returnpath] (handle-delete-file (ensure-prefix id "/") returnpath))
-  (restricted GET "/publishfile/*" [* returnpath] (handle-publish-file * true returnpath))
-  (restricted GET "/unpublishfile/*" [* returnpath] (handle-publish-file * false returnpath))
+  (GET "/listfiles" [] (restricted (list-files "/")))
+  (GET "/listfiles/*" [*] (restricted (list-files *)))
+  (POST "/uploadfile" [path file returnpath] (restricted (handle-new-file (ensure-prefix-suffix path "/") file returnpath)))
+  (POST "/updatefile" [id file returnpath] (restricted (handle-update-file (ensure-prefix id "/") file returnpath)))
+  (POST "/deletefile" [id returnpath] (restricted (handle-delete-file (ensure-prefix id "/") returnpath)))
+  (GET "/publishfile/*" [* returnpath] (restricted (handle-publish-file * true returnpath)))
+  (GET "/unpublishfile/*" [* returnpath] (restricted (handle-publish-file * false returnpath)))
   (GET "/files/*" [*] (get-file *)))

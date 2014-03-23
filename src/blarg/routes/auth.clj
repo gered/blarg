@@ -40,4 +40,4 @@
   (GET "/login" [] (login-page))
   (POST "/login" [id pass] (handle-login id pass))
   (GET "/logout" [] (logout))
-  (restricted GET "/private" [] "private!"))
+  (GET "/private" [] (restricted "private!")))

@@ -28,4 +28,4 @@
              (doall))))))
 
 (defroutes rss-routes
-    (GET "/rss" [] (handle-rss)))
+  (GET "/rss" [] (handle-rss)))
