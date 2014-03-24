@@ -2,5 +2,5 @@
   (:require [blarg.routes.auth :as auth]
             [noir.session :as session]))
 
-(defn auth-required [method url params]
+(defn auth-required [request]
   (auth/logged-in?))

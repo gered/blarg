@@ -59,5 +59,5 @@
 (def app (app-handler
            [auth-routes home-routes posts-routes files-routes rss-routes app-routes]
            :middleware [wrap-exceptions]
-           :access-rules [[{:redirect "/unauthorized"} auth-required]]
+           :access-rules [{:redirect "/unauthorized" :rule auth-required}]
            :formats [:json-kw :edn]))
