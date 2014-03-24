@@ -9,7 +9,7 @@
    [com.taoensso/timbre "3.0.0"]
    [com.taoensso/tower "2.0.1"]
    [cheshire "5.2.0"]
-   [selmer "0.2.4"]
+   [clj-jtwig-java6 "0.3.1"]
    [environ "0.4.0"]
    [markdown-clj "0.9.26"]
    [com.ashafa/clutch "0.4.0-RC1"]
