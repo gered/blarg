@@ -19,7 +19,7 @@
   :repl-options {:init-ns blarg.repl}
   :plugins [[lein-ring "0.8.10"]
             [lein-environ "0.4.0"]]
-  :ring {:handler blarg.handler/war-handler
+  :ring {:handler blarg.handler/app
          :init    blarg.handler/init
          :destroy blarg.handler/destroy}
   :profiles
