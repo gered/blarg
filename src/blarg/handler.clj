@@ -11,6 +11,7 @@
   (:require [noir.util.middleware :refer [app-handler]]
             [noir.response :as resp]
             [compojure.route :as route]
+            [compojure.response :refer [render]]
             [taoensso.timbre :as timbre]
             [taoensso.timbre.appenders.rotor :as rotor]
             [selmer.parser :as parser]
@@ -19,7 +20,7 @@
 
 (defroutes app-routes
   (route/resources "/")
-  (route/not-found (layout/render "notfound.html")))
+  (layout/render-handler "notfound.html" :status 404))
 
 (defn init []
   (timbre/set-config!
@@ -52,9 +53,11 @@
       (handler request)
       (catch Throwable e
         (timbre/error e)
-        {:status 500
-         :headers {"Content-Type" "text/html"}
-         :body (layout/render-template request "error.html" {:error-info e})}))))
+        (layout/render-response
+          request
+          "error.html"
+          :params {:error-info e}
+          :status 500)))))
 
 (def app (app-handler
            [auth-routes home-routes posts-routes files-routes rss-routes app-routes]
