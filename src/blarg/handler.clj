@@ -51,7 +51,7 @@
     (try
       (handler request)
       (catch Throwable e
-        (.printStackTrace e)
+        (timbre/error e)
         {:status 500
          :headers {"Content-Type" "text/html"}
          :body (layout/render-template request "error.html" {:error-info e})}))))
