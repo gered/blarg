@@ -17,13 +17,13 @@
   (let [p (ensure-prefix-suffix path "/")]
     (layout/render
       "files/list.html"
-      {:html-title (->html-title [(str "Files in " p)])
-       :path p
-       :files (files/list-files p)
-       :tree (files/get-tree)
-       :error (session/flash-get :file-error)
-       :success (session/flash-get :file-success)
-       :notice (session/flash-get :file-notice)})))
+      :params {:html-title (->html-title [(str "Files in " p)])
+               :path p
+               :files (files/list-files p)
+               :tree (files/get-tree)
+               :error (session/flash-get :file-error)
+               :success (session/flash-get :file-success)
+               :notice (session/flash-get :file-notice)})))
 
 (defn handle-new-file [path file returnpath]
   (if (valid-upload? file)

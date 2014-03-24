@@ -43,23 +43,23 @@
         offset (* currentpage posts/per-page)]
     (layout/render
       "posts/list.html"
-      {:posts (posts/list-posts (auth/logged-in?) posts/per-page offset)
-       :prevpage (- currentpage 1)
-       :nextpage (+ currentpage 1)
-       :atlastpage (= currentpage lastpage)
-       :atfirstpage (= currentpage 0)
-       :inlist true})))
+      :params {:posts (posts/list-posts (auth/logged-in?) posts/per-page offset)
+               :prevpage (- currentpage 1)
+               :nextpage (+ currentpage 1)
+               :atlastpage (= currentpage lastpage)
+               :atfirstpage (= currentpage 0)
+               :inlist true})))
 
 (defn list-by-tag [tag]
   (layout/render
     "posts/listbytag.html"
-    {:posts (posts/list-posts-by-tag (auth/logged-in?) tag)
-     :tag tag}))
+    :params {:posts (posts/list-posts-by-tag (auth/logged-in?) tag)
+             :tag tag}))
 
 (defn list-archive []
   (layout/render
     "posts/listarchive.html"
-    {:months (posts/list-posts-archive (auth/logged-in?))}))
+    :params {:months (posts/list-posts-archive (auth/logged-in?))}))
 
 (defn show-post-page [year month day slug]
   (let [date (str (string->int year) "-" (string->int month) "-" (string->int day))
@@ -67,17 +67,18 @@
     (if (not-empty post)
       (layout/render
         "posts/showpost.html"
-        {:post post
-         :html-title (->html-title [(:title post)])})
+        :params {:post post
+                 :html-title (->html-title [(:title post)])})
       (resp/redirect "/notfound"))))
 
 (defn new-post-page [& post]
   (layout/render
     "posts/newpost.html"
-    (merge (first post)
-      {:all-tags (posts/list-tags)
-       :html-title (->html-title ["New Post"])
-       :validation-errors @vali/*errors*})))
+    :params (merge
+              (first post)
+              {:all-tags (posts/list-tags)
+               :html-title (->html-title ["New Post"])
+               :validation-errors @vali/*errors*})))
 
 (defn handle-new-post [title tags body]
   (if (valid-post? title tags body)
@@ -94,11 +95,12 @@
                (posts/get-post id))]
     (layout/render
       "posts/editpost.html"
-      (merge post
-        {:tags (tags->string (:tags post))
-         :all-tags (posts/list-tags)
-         :html-title (->html-title ["Edit Post"])
-         :validation-errors @vali/*errors*}))))
+      :params (merge
+                post
+                {:tags (tags->string (:tags post))
+                 :all-tags (posts/list-tags)
+                 :html-title (->html-title ["Edit Post"])
+                 :validation-errors @vali/*errors*}))))
 
 (defn handle-edit-post [id title tags body]
   (if (valid-post? title tags body)

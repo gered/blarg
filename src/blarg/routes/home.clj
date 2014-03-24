@@ -7,11 +7,13 @@
 
 (defn about-page []
   (layout/render
-    "about.html" {:html-title (->html-title ["About"])}))
+    "about.html"
+    :params {:html-title (->html-title ["About"])}))
 
 (defn projects-page []
   (layout/render
-    "projects.html" {:html-title (->html-title ["Projects"])}))
+    "projects.html"
+    :params {:html-title (->html-title ["Projects"])}))
 
 (defroutes home-routes
   (GET "/about" [] (about-page))

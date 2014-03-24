@@ -54,7 +54,7 @@
         (.printStackTrace e)
         {:status 500
          :headers {"Content-Type" "text/html"}
-         :body (layout/render "error.html" {:error-info e})}))))
+         :body (layout/render-template request "error.html" {:error-info e})}))))
 
 (def app (app-handler
            [auth-routes home-routes posts-routes files-routes rss-routes app-routes]

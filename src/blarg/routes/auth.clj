@@ -4,6 +4,8 @@
         [noir.util.route])
   (:require [blarg.views.layout :as layout]
             [blarg.models.users :as users]
+            [ring.util.response :refer [status]]
+            [ring.middleware.head :refer [wrap-head]]
             [noir.session :as session]
             [noir.response :as resp]
             [noir.validation :as vali]))
@@ -14,8 +16,10 @@
 (defn login-page []
   (if (logged-in?)
     (resp/redirect "/")
-    (layout/render "auth/login.html" {:login-error (session/flash-get :login-error)
-                                      :html-title (->html-title ["Login"])})))
+    (layout/render
+      "auth/login.html"
+      :params {:login-error (session/flash-get :login-error)
+               :html-title  (->html-title ["Login"])})))
 
 (defn handle-login [id pass]
   (if-let [user (users/get-user id pass)]
@@ -31,9 +35,7 @@
   (resp/redirect "/"))
 
 (defn handle-unauthorized []
-  {:status 401
-   :headers {"Content-Type" "text/html"}
-   :body (layout/render "unauthorized.html")})
+  (layout/render "unauthorized.html" :status 401))
 
 (defroutes auth-routes
   (GET "/unauthorized" [] (handle-unauthorized))
