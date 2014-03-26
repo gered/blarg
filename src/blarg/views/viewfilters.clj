@@ -22,6 +22,3 @@
 
 (deftwigfn "to_fulltime" [date]
   (clj-time.local/format-local-time date :rfc822))
-
-(deftwigfn "is_empty" [x]
-  (empty? x))
