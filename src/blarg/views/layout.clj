@@ -1,18 +1,18 @@
 (ns blarg.views.layout
-  (:require [selmer.parser :as parser]
+  (:require [clj-jtwig.core :as jtwig]
             [ring.util.response :as resp]
             [compojure.response :refer [Renderable]]
             [noir.session :as session])
   (:use [blarg.views.viewfilters]))
 
-(def template-path "blarg/views/templates/")
+(def template-path "views/")
 
 (defn- render-template [request template params]
-  (parser/render-file
+  (jtwig/render-resource
     (str template-path template)
     (assoc params
       :context (:context request)
-      :user-id (session/get :user))))
+      :userId (session/get :user))))
 
 (defn render-response [request template & {:keys [params status content-type]}]
   (-> (render-template request template params)

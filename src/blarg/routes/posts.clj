@@ -68,7 +68,7 @@
       (layout/render
         "posts/showpost.html"
         :params {:post post
-                 :html-title (->html-title [(:title post)])})
+                 :htmlTitle (->html-title [(:title post)])})
       (resp/redirect "/notfound"))))
 
 (defn new-post-page [& post]
@@ -76,8 +76,8 @@
     "posts/newpost.html"
     :params (merge
               (first post)
-              {:all-tags (posts/list-tags)
-               :html-title (->html-title ["New Post"])
+              {:allTags (posts/list-tags)
+               :htmlTitle (->html-title ["New Post"])
                :validation-errors @vali/*errors*})))
 
 (defn handle-new-post [title tags body]
@@ -98,9 +98,9 @@
       :params (merge
                 post
                 {:tags (tags->string (:tags post))
-                 :all-tags (posts/list-tags)
-                 :html-title (->html-title ["Edit Post"])
-                 :validation-errors @vali/*errors*}))))
+                 :allTags (posts/list-tags)
+                 :htmlTitle (->html-title ["Edit Post"])
+                 :validationErrors @vali/*errors*}))))
 
 (defn handle-edit-post [id title tags body]
   (if (valid-post? title tags body)

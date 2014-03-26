@@ -14,7 +14,8 @@
             [compojure.response :refer [render]]
             [taoensso.timbre :as timbre]
             [taoensso.timbre.appenders.rotor :as rotor]
-            [selmer.parser :as parser]
+            [clj-jtwig.core :as jtwig]
+            [clj-jtwig.web.middleware :refer [wrap-servlet-context-path]]
             [blarg.views.layout :as layout]
             [blarg.models.db :as db]))
 
@@ -39,7 +40,7 @@
 
   (when (= "DEV" (config-val :env))
     (timbre/info "Dev environment. Template caching disabled.")
-    (parser/toggle-caching))
+    (jtwig/toggle-compiled-template-caching! false))
   
   (timbre/info "touching database...")
   (db/touch-databases))
@@ -56,11 +57,11 @@
         (layout/render-response
           request
           "error.html"
-          :params {:error-info e}
+          :params {:errorInfo e}
           :status 500)))))
 
 (def app (app-handler
            [auth-routes home-routes posts-routes files-routes rss-routes app-routes]
-           :middleware [wrap-exceptions]
+           :middleware [wrap-servlet-context-path wrap-exceptions]
            :access-rules [{:redirect "/unauthorized" :rule auth-required}]
            :formats [:json-kw :edn]))

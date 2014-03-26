@@ -1,31 +1,27 @@
 (ns blarg.views.viewfilters
   (:use [blarg.datetime]
         [blarg.routes.helpers])
-  (:require [selmer.filters :refer [add-filter!]]
+  (:require [clj-jtwig.functions :refer [deftwigfn]]
             [markdown.core :as md]
             [clj-time.core]
             [clj-time.format]))
 
-(add-filter!
-  :md-to-html
-  #(md/md-to-html-string %))
+(deftwigfn "md_to_html" [s]
+  (md/md-to-html-string s))
 
-(add-filter!
-  :post-url
-  #(get-post-url %))
+(deftwigfn "post_url" [post]
+  (->> post
+       (clojure.walk/keywordize-keys)
+       (get-post-url)))
 
-(add-filter!
-  :to_relative
-  #(->relative-timestamp %))
+(deftwigfn "to_relative" [date]
+  (->relative-timestamp date))
 
-(add-filter!
-  :to_month-day
-  #(->month-day-str %))
+(deftwigfn "to_month_day" [date]
+  (->month-day-str date))
 
-(add-filter!
-  :to_fulltime
-  #(clj-time.local/format-local-time % :rfc822))
+(deftwigfn "to_fulltime" [date]
+  (clj-time.local/format-local-time date :rfc822))
 
-(add-filter!
-  :is-empty
-  #(empty? %))
+(deftwigfn "is_empty" [x]
+  (empty? x))

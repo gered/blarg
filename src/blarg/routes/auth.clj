@@ -18,8 +18,8 @@
     (resp/redirect "/")
     (layout/render
       "auth/login.html"
-      :params {:login-error (session/flash-get :login-error)
-               :html-title  (->html-title ["Login"])})))
+      :params {:loginError (session/flash-get :login-error)
+               :htmlTitle  (->html-title ["Login"])})))
 
 (defn handle-login [id pass]
   (if-let [user (users/get-user id pass)]

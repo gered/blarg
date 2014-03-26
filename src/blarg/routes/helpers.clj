@@ -2,7 +2,7 @@
   (:require [clj-time.core]))
 
 (defn get-post-url [post]
-  (str 
+  (str
     "/"
     (clj-time.core/year (:created_at post)) "/"
     (clj-time.core/month (:created_at post)) "/"

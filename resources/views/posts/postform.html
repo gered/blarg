@@ -2,19 +2,19 @@
 	<div class="control-group">
 		<label class="control-label" for="title">Title</label>
 		<div class="controls">
-			<input type="text" class="input-xxlarge" id="title" name="title" placeholder="Post Title" value="{{title}}" />
+			<input type="text" class="input-xxlarge" id="title" name="title" placeholder="Post Title" value="{{ title }}" />
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="tags">Tags</label>
 		<div class="controls">
-			<input type="text" class="input-xxlarge" id="tags" name="tags" value="{{tags}}" />
+			<input type="text" class="input-xxlarge" id="tags" name="tags" value="{{ tags }}" />
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="body">Post Body</label>
 		<div class="controls">
-			<textarea id="body" data-provide="markdown" name="body" rows="20">{{body}}</textarea>
+			<textarea id="body" data-provide="markdown" name="body" rows="20">{{ body }}</textarea>
 		</div>
 	</div>	
 	<div class="form-actions">
@@ -25,13 +25,13 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	var allTags = {{all-tags|json|safe}};
+	var allTags = {{ allTags|json_encode }};
 	
 	$("#body").markdown();
 	$("#tags").select2({tags:allTags});
 	$("#tags").on("change", function() { $("#tags_val").html($("#tags").val());});
 	
-	var errors = {{validation-errors|json|safe}};
+	var errors = {{ validationErrors|json_encode }};
 	for (var field in errors) {
 		var inputElement = $('#' + field);
 		var controlGroup = inputElement.closest('div.control-group');

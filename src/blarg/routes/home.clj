@@ -8,12 +8,12 @@
 (defn about-page []
   (layout/render
     "about.html"
-    :params {:html-title (->html-title ["About"])}))
+    :params {:htmlTitle (->html-title ["About"])}))
 
 (defn projects-page []
   (layout/render
     "projects.html"
-    :params {:html-title (->html-title ["Projects"])}))
+    :params {:htmlTitle (->html-title ["Projects"])}))
 
 (defroutes home-routes
   (GET "/about" [] (about-page))

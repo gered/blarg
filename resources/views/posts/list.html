@@ -1,31 +1,31 @@
-{% extends "blarg/views/templates/base.html" %}
+{% extends "../base.html" %}
 
 {% block content %}
 
-{% if posts|is-empty %}
+{% if (posts is empty) %}
 <div>
 	<p class="text-center">There are no posts.</p>
 </div>
 {% else %}
 {% for post in posts %}
-{% include "blarg/views/templates/posts/post.html" %}
+{% include "post.html" %}
 {% endfor %}
 
 <ul class="pager">
 	{% if atlastpage %}
 	<li class="previous disabled"><a>&larr; Older</a></li>
 	{% else %}
-	<li class="previous"><a href="{{context}}/?page={{nextpage}}">&larr; Older</a></li>
+	<li class="previous"><a href="{{ path(concat('/?page=', nextpage)) }}">&larr; Older</a></li>
 	{% endif %}
 
 	{% if atfirstpage %}
 	<li class="next disabled"><a>Newer &rarr;</a></li>
 	{% else %}
-	<li class="next"><a href="{{context}}/?page={{prevpage}}">Newer &rarr;</a></li>
+	<li class="next"><a href="{{ path(concat('/?page=', prevpage)) }}">Newer &rarr;</a></li>
 	{% endif %}
 </ul>
 
-{% include "blarg/views/templates/posts/publishmodal.html" %}
-{% include "blarg/views/templates/posts/deletemodal.html" %}
+{% include "publishmodal.html" %}
+{% include "deletemodal.html" %}
 {% endif %}
 {% endblock %}

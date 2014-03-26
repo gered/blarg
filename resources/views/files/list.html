@@ -1,26 +1,26 @@
-{% extends "blarg/views/templates/base.html" %}
+{% extends "../base.html" %}
 
 {% block content %}
 
 <div class="page-header">
-	<h2>Index of {{path}}</h2>
+	<h2>Index of {{ model['path'] }}</h2>
 </div>
 
 {% if success %}
-<div class="alert alert-success">{{success}}</div>
+<div class="alert alert-success">{{ success }}</div>
 {% endif %}
 {% if error %}
-<div class="alert alert-error">{{error}}</div>
+<div class="alert alert-error">{{ error }}</div>
 {% endif %}
-{% if notice %}
-<div class="alert alert-info">{{notice}}</div>
+{% if model['notice'] %}
+<div class="alert alert-info">{{ model['notice'] }}</div>
 {% endif %}
 
 <div>
 	<div class="pull-left form-inline">
 		<select id="tree">
 		{% for folder in tree %}
-		<option{% ifequal folder path %} selected{% endifequal %}>{{folder}}</option>
+		<option{% if (folder == path) %} selected{% endif %}>{{ folder }}</option>
 		{% endfor %}
 		</select>
 		<a class="btn" href="#" id="tree-selector">Go</a>
@@ -32,7 +32,7 @@
 </div>
 
 <div class="file-list-container">
-	{% if not files|is-empty %}
+	{% if (not files is empty) %}
 	<table class="table table-hover table-condensed">
 		<thead>
 			<tr>
@@ -44,22 +44,22 @@
 		</thead>
 		<tbody>
 			{% for file in files %}
-			<tr{% if not file.published %} class="unpublished-file"{% endif %}>
+			<tr{% if (not file.published) %} class="unpublished-file"{% endif %}>
 				<td>
-					<a href="{{context}}/files{{path}}{{file.filename}}"><i class="icon-file"></i>  {{file.filename}}</a><br />
-					<small class="muted">{{file.content-type}}</small>
+					<a href="{{ path(concat('/files', model['path'], file.filename)) }}"><i class="icon-file"></i> {{ file.filename }}</a><br />
+					<small class="muted">{{ file['content-type'] }}</small>
 				</td>
-				<td>{{file.size}}</td>
-				<td>{{file.last_modified|to_fulltime}}</td>
+				<td>{{ file.size }}</td>
+				<td>{{ file.last_modified|to_fulltime }}</td>
 				<td style="text-align: right;">
-					<a class="btn btn-warning" title="Update File" data-updatefileid="{{file.id}}" href="#"><i class="icon-pencil icon-white"></i></a>
+					<a class="btn btn-warning" title="Update File" data-updatefileid="{{ file.id }}" href="#"><i class="icon-pencil icon-white"></i></a>
 					{% if file.published %}
-					<a class="btn btn-warning" title="Unpublish File" href="{{context}}/unpublishfile{{file.id}}?returnpath={{path}}"><i class="icon-minus-sign icon-white"></i></a>
+					<a class="btn btn-warning" title="Unpublish File" href="{{ path(concat('/unpublishfile', file.id, '?returnpath=', model['path'])) }}"><i class="icon-minus-sign icon-white"></i></a>
 					{% endif %}
-					{% if not file.published %}
-					<a class="btn btn-success" title="Publish File" href="{{context}}/publishfile{{file.id}}?returnpath={{path}}"><i class="icon-ok-sign icon-white"></i></a>
+					{% if (not file.published) %}
+					<a class="btn btn-success" title="Publish File" href="{{ path(concat('/publishfile', file.id, '?returnpath=', model['path'])) }}"><i class="icon-ok-sign icon-white"></i></a>
 					{% endif %}
-					<a class="btn btn-danger" title="Delete File" data-deletefileid="{{file.id}}" href="#"><i class="icon-remove icon-white"></i></a>
+					<a class="btn btn-danger" title="Delete File" data-deletefileid="{{ file.id }}" href="#"><i class="icon-remove icon-white"></i></a>
 				</td>
 			</tr>
 			{% endfor %}
@@ -75,8 +75,8 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="newFileModalLabel">Upload File</h3>
 	</div>
-	<form action="{{context}}/uploadfile?returnpath={{path}}" method="post" enctype="multipart/form-data" class="form-horizontal">
-		<input type="hidden" id="newPath" name="path" value="{{path}}" />
+	<form action="{{ path(concat('/uploadfile?returnpath=', model['path'])) }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<input type="hidden" id="newPath" name="path" value="{{ model['path'] }}" />
 		<div class="modal-body">
 			<div class="control-group">
 				<label class="control-label" for="newFile">Upload File</label>
@@ -98,7 +98,7 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="updateFileModalLabel">Update File</h3>
 	</div>
-	<form action="{{context}}/updatefile?returnpath={{path}}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{{ path(concat('/updatefile?returnpath=', model['path'])) }}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<input type="hidden" id="updateFileId" name="id" />
 		<div class="modal-body">
 			<p>Select a file to upload over top of this file with:</p> 
@@ -122,7 +122,7 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="deleteFileModalLabel">Delete File</h3>
 	</div>
-	<form action="{{context}}/deletefile?returnpath={{path}}" method="post" class="form-horizontal">
+	<form action="{{ path(concat('/deletefile?returnpath=', model['path'])) }}" method="post" class="form-horizontal">
 		<input type="hidden" id="deleteFileId" name="id" />
 		<div class="modal-body">
 			<p>Confirm that you would like to delete the following file:</p>
@@ -138,12 +138,12 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#tree').combobox({force_match: false});
-	$('#tree').data('combobox').val('{{path}}');
+	$('#tree').data('combobox').val('{{ model['path'] }}');
 });
 
 $('#tree-selector').click(function() {
 	var path = $('#tree').data('combobox').val();
-	window.location.href = '{{context}}/listfiles' + path;
+	window.location.href = '{{ path('/listfiles') }}' + path;
 });
 
 $('a[data-updatefileid]').click(function() {

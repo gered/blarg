@@ -1,23 +1,23 @@
-<div class="post{%if not inlist %} single-post{% endif %}{% if not post.published %} unpublished-post{% endif %}">
+<div class="post{%if (not inlist) %} single-post{% endif %}{% if (not post.published) %} unpublished-post{% endif %}">
 	<div class="header">
 		{% if inlist %}
-		<a href="{{context}}{{post|post-url}}"><h2>{{post.title}}</h2></a>
+		<a href="{{ path(post|post_url) }}"><h2>{{ post.title }}</h2></a>
 		{% else %}
-		<h2>{{post.title}}</h2>
+		<h2>{{ post.title }}</h2>
 		{% endif %}
 		<div>
 			<div class="pull-left">
-				<span class="muted">Posted by {{post.user}}, <time title="{{post.created_at|to_fulltime}}">{{post.created_at|to_relative}}</time></span>
+				<span class="muted">Posted by {{ post.user }}, <time title="{{ post.created_at|to_fulltime }}">{{ post.created_at|to_relative }}</time></span>
 			</div>
-			{% if user-id %}
+			{% if userId %}
 			<div class="pull-right">
-				<a class="btn btn-mini" href="{{context}}/editpost/{{post._id}}">Edit</a>
-				<a class="btn btn-mini btn-danger" data-deletepostid="{{post._id}}" href="#">Delete</a>
+				<a class="btn btn-mini" href="{{ path(concat('/editpost/', post._id)) }}">Edit</a>
+				<a class="btn btn-mini btn-danger" data-deletepostid="{{ post._id }}" href="#">Delete</a>
 				{% if post.published %}
-				<a class="btn btn-mini btn-warning" href="{{context}}/unpublish/{{post._id}}">Unpublish</a>
+				<a class="btn btn-mini btn-warning" href="{{ path(concat('/unpublish/', post._id)) }}">Unpublish</a>
 				{% endif %}
-				{% if not post.published %}
-				<a class="btn btn-mini btn-success" data-publishpostid="{{post._id}}" href="#">Publish</a>
+				{% if (not post.published) %}
+				<a class="btn btn-mini btn-success" data-publishpostid="{{ post._id }}" href="#">Publish</a>
 				{% endif %}
 			</div>
 			{% endif %}
@@ -26,16 +26,16 @@
 	</div>
 	
 	<div class="content">
-	{{post.body|md-to-html|safe}}
+	{{ post.body|md_to_html }}
 	</div>
 	
 	<div class="footer">
 		<div class="pull-left">
-			<small>{% for tag in post.tags %}<span class="label"><a href="{{context}}/tag/{{tag}}">{{tag}}</a></span> {% endfor %}</small>
+			<small>{% for tag in post.tags %}<span class="label"><a href="{{ path(concat('/tag/', tag)) }}">{{ tag }}</a></span> {% endfor %}</small>
 		</div>
 		{% if inlist %}
 		<div class="pull-right">
-			<a href="{{context}}{{post|post-url}}#comments">Comments</a>
+			<a href="{{ path(post|post_url) }}#comments">Comments</a>
 		</div>
 		{% endif %}
 		<div class="clearfix"></div>

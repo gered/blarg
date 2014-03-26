@@ -1,16 +1,16 @@
-{% extends "blarg/views/templates/base.html" %}
+{% extends "../base.html" %}
 
 {% block content %}
 <div class="login-container">
 	<h2>Login</h2>
 
-	{% if login-error %}
-	<p class="error">{{login-error}}</p>
+	{% if loginError %}
+	<p class="error">{{ loginError }}</p>
 	{% endif %}
 
-	<form action="{{context}}/login" method="POST">
-		<p><input id="id" name="id" type="text" class="input-block-level" placeholder="Username"></input></p>
-		<p><input id="pass" name="pass" type="password" class="input-block-level" placeholder="Password"></input></p>
+	<form action="{{ path('/login') }}" method="POST">
+		<p><input id="id" name="id" type="text" class="input-block-level" placeholder="Username" /></p>
+		<p><input id="pass" name="pass" type="password" class="input-block-level" placeholder="Password" /></p>
 		<button class="btn btn-primary" type="submit">Login</button>
 	</form>
 
