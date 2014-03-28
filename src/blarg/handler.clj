@@ -62,6 +62,6 @@
 
 (def app (app-handler
            [auth-routes home-routes posts-routes files-routes rss-routes app-routes]
-           :middleware [wrap-servlet-context-path wrap-exceptions]
+           :middleware [wrap-exceptions wrap-servlet-context-path]
            :access-rules [{:redirect "/unauthorized" :rule auth-required}]
            :formats [:json-kw :edn]))
