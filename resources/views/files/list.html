@@ -49,7 +49,7 @@
 					<a href="{{ path(concat('/files', model['path'], file.filename)) }}"><i class="icon-file"></i> {{ file.filename }}</a><br />
 					<small class="muted">{{ file['content-type'] }}</small>
 				</td>
-				<td>{{ file.size }}</td>
+				<td>{{ file['size'] }}</td>
 				<td>{{ file.last_modified|to_fulltime }}</td>
 				<td style="text-align: right;">
 					<a class="btn btn-warning" title="Update File" data-updatefileid="{{ file.id }}" href="#"><i class="icon-pencil icon-white"></i></a>
