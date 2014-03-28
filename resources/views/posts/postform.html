@@ -2,19 +2,19 @@
 	<div class="control-group">
 		<label class="control-label" for="title">Title</label>
 		<div class="controls">
-			<input type="text" class="input-xxlarge" id="title" name="title" placeholder="Post Title" value="{{ title }}" />
+			<input type="text" class="input-xxlarge" id="title" name="title" placeholder="Post Title" value="{{ title|nonull }}" />
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="tags">Tags</label>
 		<div class="controls">
-			<input type="text" class="input-xxlarge" id="tags" name="tags" value="{{ tags }}" />
+			<input type="text" class="input-xxlarge" id="tags" name="tags" value="{{ tags|nonull }}" />
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="body">Post Body</label>
 		<div class="controls">
-			<textarea id="body" data-provide="markdown" name="body" rows="20">{{ body }}</textarea>
+			<textarea id="body" data-provide="markdown" name="body" rows="20">{{ body|nonull }}</textarea>
 		</div>
 	</div>	
 	<div class="form-actions">
