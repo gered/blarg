@@ -78,7 +78,7 @@
               (first post)
               {:allTags (posts/list-tags)
                :htmlTitle (->html-title ["New Post"])
-               :validation-errors @vali/*errors*})))
+               :validationErrors @vali/*errors*})))
 
 (defn handle-new-post [title tags body]
   (if (valid-post? title tags body)
