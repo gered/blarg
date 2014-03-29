@@ -4,8 +4,7 @@
             [compojure.core :refer [defroutes]]
             [compojure.route :as route]
             [compojure.response :refer [render]]
-            [taoensso.timbre :as timbre]
-            [taoensso.timbre.appenders.rotor :as rotor]
+            [taoensso.timbre :refer [set-config! log]]
             [clj-jtwig.core :as jtwig]
             [clj-jtwig.web.middleware :refer [wrap-servlet-context-path]]
             [blarg.config :refer [config-val]]
@@ -20,28 +19,28 @@
   (layout/render-handler "notfound.html" :status 404))
 
 (defn init []
-  (timbre/set-config! [:shared-appender-config :spit-filename] "blarg.log")
-  (timbre/set-config! [:appenders :spit :enabled?] true)
-  (timbre/set-config! [:fmt-output-fn] log-formatter)
+  (set-config! [:shared-appender-config :spit-filename] "blarg.log")
+  (set-config! [:appenders :spit :enabled?] true)
+  (set-config! [:fmt-output-fn] log-formatter)
 
-  (timbre/info "blarg started successfully")
+  (log :info "blarg started successfully")
 
   (when (= "DEV" (config-val :env))
-    (timbre/info "Dev environment. Template caching disabled.")
+    (log :info "Dev environment. Template caching disabled.")
     (jtwig/toggle-compiled-template-caching! false))
   
-  (timbre/info "touching database...")
+  (log :info "touching database...")
   (db/touch-databases))
 
 (defn destroy []
-  (timbre/info "blarg is shutting down..."))
+  (log :info "blarg is shutting down..."))
 
 (defn wrap-exceptions [handler]
   (fn [request]
     (try
       (handler request)
       (catch Throwable e
-        (timbre/error e)
+        (log :error e "Unhandled exception.")
         (layout/render-response
           request
           "error.html"
