@@ -1,4 +1,4 @@
-(defproject blarg "0.2"
+(defproject blarg "0.3"
   :description "webapp for http://blarg.ca/"
   :url "http://blarg.ca/"
   :dependencies
