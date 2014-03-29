@@ -10,7 +10,7 @@
    [cheshire "5.2.0"]
    [clj-jtwig-java6 "0.3.2"]
    [environ "0.4.0"]
-   [markdown-clj "0.9.26"]
+   [markdown-clj "0.9.41"]
    [com.ashafa/clutch "0.4.0-RC1"]
    [slugger "1.0.1"]
    [clj-time "0.6.0"]
