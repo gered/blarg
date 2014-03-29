@@ -19,12 +19,8 @@
   [file]
   (parse-stream (io/reader (io/resource file)) true))
 
-(defn md->html
-  "reads a markdown file from public/md and returns an HTML string"
-  [filename]
-  (->>
-    (noir.io/slurp-resource filename)
-    (md/md-to-html-string)))
+(defn md->html [s]
+  (md/md-to-html-string s))
 
 (defn string->int
   ([s] (string->int s nil))

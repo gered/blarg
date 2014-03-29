@@ -2,12 +2,12 @@
   (:use [blarg.datetime]
         [blarg.routes.helpers])
   (:require [clj-jtwig.functions :refer [deftwigfn]]
-            [markdown.core :as md]
             [clj-time.core]
-            [clj-time.format]))
+            [clj-time.format]
+            [blarg.util :refer [md->html]]))
 
 (deftwigfn "md_to_html" [s]
-  (md/md-to-html-string s))
+  (md->html s))
 
 (deftwigfn "post_url" [post]
   (->> post

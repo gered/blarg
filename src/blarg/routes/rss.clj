@@ -1,13 +1,13 @@
 (ns blarg.routes.rss
   (:use [blarg.routes.helpers]
         [compojure.core])
-  (:require [markdown.core :as md]
-            [noir.response :refer [xml]]
+  (:require [noir.response :refer [xml]]
             [clj-rss.core :as rss]
             [clj-time.core]
             [clj-time.coerce]
             [blarg.models.posts :as posts]
-            [blarg.route-utils :refer [register-routes]]))
+            [blarg.route-utils :refer [register-routes]]
+            [blarg.util :refer [md->html]]))
 
 (def rss-title "blarg.ca")
 (def rss-site-url "http://www.blarg.ca/")
@@ -25,7 +25,7 @@
                     {:title (:title post)
                      :pubDate (clj-time.coerce/to-date (:created_at post))
                      :link (str rss-site-url (subs (get-post-url post) 1))
-                     :description (md/md-to-html-string (:body post))}))
+                     :description (md->html (:body post))}))
              (doall))))))
 
 (register-routes rss-routes
