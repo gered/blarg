@@ -7,7 +7,6 @@
    [compojure "1.1.6"]
    [ring-server "0.3.1"]
    [com.taoensso/timbre "3.0.0"]
-   [com.taoensso/tower "2.0.1"]
    [cheshire "5.2.0"]
    [clj-jtwig-java6 "0.3.2"]
    [environ "0.4.0"]
