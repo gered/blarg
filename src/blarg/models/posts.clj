@@ -96,10 +96,9 @@
     (if-let [posts (->post-list
                      (couch/with-db posts
                        (couch/get-view "posts" view-name {:descending true})))]
-      (->> posts
-           (map #(assoc % :mmyyyy (->nicer-month-year-str (:mmyyyy %))))
-           (group-by #(:mmyyyy %))
-           (vals)))))
+      (map
+        #(assoc % :mmyyyy (->nicer-month-year-str (:mmyyyy %)))
+        posts))))
 
 (defn count-posts
   [unpublished?]

@@ -59,7 +59,7 @@
 (defn list-archive []
   (layout/render
     "posts/listarchive.html"
-    :params {:months (posts/list-posts-archive (auth/logged-in?))}))
+    :params {:posts (posts/list-posts-archive (auth/logged-in?))}))
 
 (defn show-post-page [year month day slug]
   (let [date (str (string->int year) "-" (string->int month) "-" (string->int day))
