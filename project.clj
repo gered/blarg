@@ -16,7 +16,8 @@
    [slugger "1.0.1"]
    [clj-time "0.6.0"]
    [org.clojure/math.numeric-tower "0.0.4"]
-   [clj-rss "0.1.3"]]
+   [clj-rss "0.1.3"]
+   [clj-metasearch "0.1.1"]]
   :repl-options {:init-ns blarg.repl}
   :plugins [[lein-ring "0.8.10"]
             [lein-environ "0.4.0"]]
