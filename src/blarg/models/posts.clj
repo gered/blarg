@@ -2,10 +2,28 @@
   (:use [blarg.models.db]
         [blarg.datetime]
         [slugger.core])
-  (:require [com.ashafa.clutch :as couch]))
+  (:require [com.ashafa.clutch :as couch]
+            [clj-time.core :refer [after?]]
+            [blarg.util :refer [md->html]]))
 
 (def per-page 5)
 (def timestamp-fields [:created_at])
+
+(defonce post-md-cache (atom {}))
+
+(defn- cache-post! [{:keys [_id created_at body] :as post}]
+  (let [cached-post (get @post-md-cache _id)]
+    (if (or (not cached-post)
+            (after? created_at (:created_at cached-post)))
+      (swap! post-md-cache assoc _id {:created_at created_at
+                                      :html_body (md->html body)})
+      cached-post)))
+
+(defn- merge-cached-post-md! [post]
+  (let [cached-post (cache-post! post)]
+    (merge
+      post
+      (select-keys cached-post [:html_body]))))
 
 (defmacro ->post-list [& body]
   `(string->date
@@ -22,39 +40,44 @@
      ~timestamp-fields))
 
 (defn get-post [id]
-  (->single-post
-    (couch/with-db posts
-      (couch/get-document id))))
+  (merge-cached-post-md!
+    (->single-post
+      (couch/with-db posts
+        (couch/get-document id)))))
 
 (defn get-post-by-date-slug [date slug]
-  (->single-post
-    (couch/with-db posts
-      (couch/get-view "posts" "listPostsBySlug" {:key [date, slug]}))))
+  (merge-cached-post-md!
+    (->single-post
+      (couch/with-db posts
+        (couch/get-view "posts" "listPostsBySlug" {:key [date, slug]})))))
 
 (defn add-post [title body user tags]
-  (->single-post
-    (couch/with-db posts
-      (couch/put-document {:title title
-                           :slug (->slug title)
-                           :body body
-                           :user user
-                           :tags tags
-                           :created_at (get-timestamp)
-                           :published false
-                           :type "post"}))))
+  (merge-cached-post-md!
+    (->single-post
+      (couch/with-db posts
+        (couch/put-document
+          {:title title
+           :slug (->slug title)
+           :body body
+           :user user
+           :tags tags
+           :created_at (get-timestamp)
+           :published false
+           :type "post"})))))
 
 (defn update-post [id title body user tags published? reset-date?]
   (if-let [post (get-post id)]
-    (->single-post
-      (couch/with-db posts
-        (couch/update-document
-          (-> (date->string post timestamp-fields)
-            (merge (if title {:title title :slug (->slug title)}))
-            (merge (if body {:body body}))
-            (merge (if user {:user user}))
-            (merge (if tags {:tags tags}))
-            (merge (if-not (nil? published?) {:published published?}))
-            (merge (if reset-date? {:created_at (get-timestamp)}))))))))
+    (merge-cached-post-md!
+      (->single-post
+        (couch/with-db posts
+          (couch/update-document
+            (-> (date->string post timestamp-fields)
+                (merge (if title {:title title :slug (->slug title)}))
+                (merge (if body {:body body}))
+                (merge (if user {:user user}))
+                (merge (if tags {:tags tags}))
+                (merge (if-not (nil? published?) {:published published?}))
+                (merge (if reset-date? {:created_at (get-timestamp)})))))))))
 
 (defn delete-post [id]
   (if-let [post (get-post id)]
@@ -78,9 +101,11 @@
                    (when n {:limit n})
                    (when offset {:skip offset}))
           viewName (if unpublished? "listPosts" "listPublishedPosts")]
-      (->post-list
-        (couch/with-db posts
-          (couch/get-view "posts" viewName params))))))
+      (map
+        merge-cached-post-md!
+        (->post-list
+          (couch/with-db posts
+            (couch/get-view "posts" viewName params)))))))
 
 (defn list-posts-by-tag [unpublished? tag]
   (let [view-name (if unpublished? "listPostsByTag" "listPublishedPostsByTag")]

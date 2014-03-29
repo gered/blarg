@@ -41,10 +41,11 @@
   (let [totalpages (postcount->pagecount )
         lastpage (make-in-range (- totalpages 1) 0 totalpages)
         currentpage (make-in-range page 0 lastpage)
-        offset (* currentpage posts/per-page)]
+        offset (* currentpage posts/per-page)
+        posts (posts/list-posts (auth/logged-in?) posts/per-page offset)]
     (layout/render
       "posts/list.html"
-      :params {:posts (posts/list-posts (auth/logged-in?) posts/per-page offset)
+      :params {:posts posts
                :prevpage (- currentpage 1)
                :nextpage (+ currentpage 1)
                :atlastpage (= currentpage lastpage)
