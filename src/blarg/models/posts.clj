@@ -15,8 +15,10 @@
   (let [cached-post (get @post-md-cache _id)]
     (if (or (not cached-post)
             (after? created_at (:created_at cached-post)))
-      (swap! post-md-cache assoc _id {:created_at created_at
-                                      :html_body (md->html body)})
+      (do
+        (swap! post-md-cache assoc _id {:created_at created_at
+                                        :html_body (md->html body)})
+        (get @post-md-cache _id))
       cached-post)))
 
 (defn- merge-cached-post-md! [post]
