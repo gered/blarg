@@ -11,21 +11,25 @@
 
 (defonce post-md-cache (atom {}))
 
-(defn- cache-post! [{:keys [_id created_at body] :as post}]
+(defn- cache-post! [{:keys [_id created_at body] :as post} & [force-cache-update?]]
   (let [cached-post (get @post-md-cache _id)]
     (if (or (not cached-post)
-            (after? created_at (:created_at cached-post)))
+            (after? created_at (:created_at cached-post))
+            force-cache-update?)
       (do
         (swap! post-md-cache assoc _id {:created_at created_at
                                         :html_body (md->html body)})
         (get @post-md-cache _id))
       cached-post)))
 
-(defn- merge-cached-post-md! [post]
-  (let [cached-post (cache-post! post)]
+(defn- merge-cached-post-md! [post & [force-cache-update?]]
+  (let [cached-post (cache-post! post force-cache-update?)]
     (merge
       post
       (select-keys cached-post [:html_body]))))
+
+(defn- remove-cached-post! [{:keys [_id] :as post}]
+  (swap! post-md-cache dissoc _id))
 
 (defmacro ->post-list [& body]
   `(string->date
@@ -65,7 +69,8 @@
            :tags tags
            :created_at (get-timestamp)
            :published false
-           :type "post"})))))
+           :type "post"})))
+    true))
 
 (defn update-post [id title body user tags published? reset-date?]
   (if-let [post (get-post id)]
@@ -79,12 +84,15 @@
                 (merge (if user {:user user}))
                 (merge (if tags {:tags tags}))
                 (merge (if-not (nil? published?) {:published published?}))
-                (merge (if reset-date? {:created_at (get-timestamp)})))))))))
+                (merge (if reset-date? {:created_at (get-timestamp)}))))))
+      true)))
 
 (defn delete-post [id]
-  (if-let [post (get-post id)]
+  (when-let [post (get-post id)]
     (couch/with-db posts
-      (couch/delete-document post))))
+      (couch/delete-document post))
+    (remove-cached-post! post)
+    post))
 
 (defn publish-post [id publish? reset-date?]
   (update-post id nil nil nil nil publish? reset-date?))
