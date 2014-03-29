@@ -1,6 +1,7 @@
 (ns blarg.util
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
+            [clojure.edn :as edn]
             [clojure.stacktrace :refer [print-stack-trace]]
             [markdown.core :as md]
             [noir.io]
@@ -11,7 +12,7 @@
   "loads a file from the resources directory, parses and returns it as clojure"
   [file]
   (with-open [r (PushbackReader. (io/reader (io/resource file)))]
-    (read r)))
+    (edn/read r)))
 
 (defn load-json
   "loads a file from the resources directory, parses it as JSON and returns it
