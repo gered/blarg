@@ -1,5 +1,7 @@
 (ns blarg.util
-  (:require [clojure.java.io :as io]
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io]
+            [clojure.stacktrace :refer [print-stack-trace]]
             [markdown.core :as md]
             [noir.io]
             [cheshire.core :refer :all])
@@ -59,3 +61,13 @@
 
 (defn ensure-prefix-suffix [s affix]
   (ensure-prefix (ensure-suffix s affix) affix))
+
+(defn get-throwable-stack-trace [throwable]
+  (if throwable
+    (with-out-str
+      (print-stack-trace throwable))))
+
+(defn log-formatter [{:keys [level throwable message timestamp hostname ns]} & [{:keys [nofonts?] :as appender-fmt-output-opts}]]
+  (format "%s %s %s [%s] - %s%s"
+          timestamp hostname (-> level name str/upper-case) ns (or message "")
+          (or (get-throwable-stack-trace throwable) "")))

@@ -12,25 +12,18 @@
             [blarg.views.layout :as layout]
             [blarg.models.db :as db]
             [blarg.routes.accessrules :refer [auth-required]]
-            [blarg.route-utils :refer [find-routes]]))
+            [blarg.route-utils :refer [find-routes]]
+            [blarg.util :refer [log-formatter]]))
 
 (defroutes app-routes
   (route/resources "/")
   (layout/render-handler "notfound.html" :status 404))
 
 (defn init []
-  (timbre/set-config!
-    [:appenders :rotor]
-    {:min-level             :info
-     :enabled?              true
-     :async?                false ; should be always false for rotor
-     :max-message-per-msecs nil
-     :fn                    rotor/appender-fn})
-  
-  (timbre/set-config!
-    [:shared-appender-config :rotor]
-    {:path "blarg.log" :max-size (* 512 1024) :backlog 10})
-  
+  (timbre/set-config! [:shared-appender-config :spit-filename] "blarg.log")
+  (timbre/set-config! [:appenders :spit :enabled?] true)
+  (timbre/set-config! [:fmt-output-fn] log-formatter)
+
   (timbre/info "blarg started successfully")
 
   (when (= "DEV" (config-val :env))
