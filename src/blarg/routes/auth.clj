@@ -4,6 +4,7 @@
         [noir.util.route])
   (:require [blarg.views.layout :as layout]
             [blarg.models.users :as users]
+            [blarg.route-utils :refer [register-routes]]
             [ring.util.response :refer [status]]
             [ring.middleware.head :refer [wrap-head]]
             [noir.session :as session]
@@ -37,7 +38,7 @@
 (defn handle-unauthorized []
   (layout/render "unauthorized.html" :status 401))
 
-(defroutes auth-routes
+(register-routes auth-routes
   (GET "/unauthorized" [] (handle-unauthorized))
   (GET "/login" [] (login-page))
   (POST "/login" [id pass] (handle-login id pass))

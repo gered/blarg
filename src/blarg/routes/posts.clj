@@ -10,7 +10,8 @@
             [noir.session :as session]
             [blarg.views.layout :as layout]
             [blarg.models.posts :as posts]
-            [blarg.routes.auth :as auth]))
+            [blarg.routes.auth :as auth]
+            [blarg.route-utils :refer [register-routes]]))
 
 (defn string->tags [s]
   (->> (clojure.string/split s #",")
@@ -121,7 +122,7 @@
     (resp/redirect "/")
     (throw (Exception. "Error deleting post."))))
 
-(defroutes posts-routes
+(register-routes posts-routes
   (GET "/" [page] (list-page (parse-int page 0)))
   (GET 
     ["/:year/:month/:day/:slug/" :year #"[0-9]{4}" :month #"[0-9]{1,2}" :day #"[0-9]{1,2}" :slug #"(.*)"] 

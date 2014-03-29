@@ -6,7 +6,8 @@
             [clj-rss.core :as rss]
             [clj-time.core]
             [clj-time.coerce]
-            [blarg.models.posts :as posts]))
+            [blarg.models.posts :as posts]
+            [blarg.route-utils :refer [register-routes]]))
 
 (def rss-title "blarg.ca")
 (def rss-site-url "http://www.blarg.ca/")
@@ -27,5 +28,5 @@
                      :description (md/md-to-html-string (:body post))}))
              (doall))))))
 
-(defroutes rss-routes
+(register-routes rss-routes
   (GET "/rss" [] (handle-rss)))

@@ -3,6 +3,7 @@
         [compojure.core]
         [blarg.routes.helpers])
   (:require [blarg.views.layout :as layout]
+            [blarg.route-utils :refer [register-routes]]
             [noir.response :as resp]))
 
 (defn about-page []
@@ -15,7 +16,7 @@
     "projects.html"
     :params {:htmlTitle (->html-title ["Projects"])}))
 
-(defroutes home-routes
+(register-routes home-routes
   (GET "/about" [] (about-page))
   (GET "/projects" [] (projects-page))
   (GET "/toslug" [text] (resp/json {:slug (if text (->slug text))})))

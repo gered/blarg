@@ -6,6 +6,7 @@
   (:require [blarg.views.layout :as layout]
             [blarg.models.files :as files]
             [blarg.routes.auth :as auth]
+            [blarg.route-utils :refer [register-routes]]
             [noir.response :as resp]
             [noir.session :as session]))
 
@@ -69,7 +70,7 @@
     (resp/content-type (:content_type file) (:data file))
     (resp/redirect "/notfound")))
 
-(defroutes files-routes
+(register-routes files-routes
   (GET "/listfiles" [] (restricted (list-files "/")))
   (GET "/listfiles/*" [*] (restricted (list-files *)))
   (POST "/uploadfile" [path file returnpath] (restricted (handle-new-file (ensure-prefix-suffix path "/") file returnpath)))
