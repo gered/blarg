@@ -1,5 +1,5 @@
 (ns user
-  (:use [blarg.repl]))
+  (:use main))
 
 (start-server)
 

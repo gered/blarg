@@ -1,12 +1,14 @@
-(ns blarg.repl
-  (:use blarg.handler
-        ring.server.standalone
-        [ring.middleware file-info file]))
+(ns main
+  (:require [ring.middleware.file :refer [wrap-file]]
+            [ring.middleware.file-info :refer [wrap-file-info]]
+            [ring.server.standalone :refer [serve]]
+            [blarg.handler :refer [handle-app init destroy]])
+  (:gen-class))
 
 (defonce server (atom nil))
 
 (defn get-handler []
-  (-> #'app
+  (-> #'handle-app
       (wrap-file "resources")
       (wrap-file-info)))
 
@@ -24,3 +26,6 @@
 (defn stop-server []
   (.stop @server)
   (reset! server nil))
+
+(defn -main [& args]
+  (start-server))

@@ -17,10 +17,10 @@
    [org.clojure/math.numeric-tower "0.0.4"]
    [clj-rss "0.1.3"]
    [clj-metasearch "0.1.1"]]
-  :repl-options {:init-ns blarg.repl}
+  :main main
   :plugins [[lein-ring "0.8.10"]
             [lein-environ "0.4.0"]]
-  :ring {:handler blarg.handler/app
+  :ring {:handler blarg.handler/handle-app
          :init    blarg.handler/init
          :destroy blarg.handler/destroy}
   :profiles
@@ -29,8 +29,8 @@
                                  :stacktraces?  false
                                  :auto-reload?  false}
                 :resource-paths ["env-resources/prod"]}
+   :repl       {:source-paths   ["dev"]}
    :dev        {:dependencies   [[ring-mock "0.1.5"]
                                  [ring/ring-devel "1.2.1"]]
-                :source-paths   ["dev"]
                 :resource-paths ["env-resources/dev"]}}
   :min-lein-version "2.0.0")
