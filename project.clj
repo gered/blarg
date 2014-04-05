@@ -25,10 +25,12 @@
          :destroy blarg.handler/destroy}
   :profiles
   {:uberjar    {:aot :all}
-   :production {:ring {:open-browser? false
-                       :stacktraces?  false
-                       :auto-reload?  false}}
-   :dev        {:dependencies [[ring-mock "0.1.5"]
-                               [ring/ring-devel "1.2.1"]]
-                :source-paths ["dev"]}}
+   :production {:ring           {:open-browser? false
+                                 :stacktraces?  false
+                                 :auto-reload?  false}
+                :resource-paths ["env-resources/prod"]}
+   :dev        {:dependencies   [[ring-mock "0.1.5"]
+                                 [ring/ring-devel "1.2.1"]]
+                :source-paths   ["dev"]
+                :resource-paths ["env-resources/dev"]}}
   :min-lein-version "2.0.0")

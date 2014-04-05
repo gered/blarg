@@ -6,7 +6,7 @@
 
 (defn get-user 
   ([id]
-    (couch/with-db users
+    (with-users-db
       (couch/get-document id)))
   ([id pass]
     (if-let [user (get-user id)]
@@ -18,10 +18,10 @@
               :password (crypt/encrypt pass)
               :email email
               :created_at (get-timestamp)}]
-    (couch/with-db users
+    (with-users-db
       (couch/put-document user))))
 
 (defn delete-user [id]
-  (couch/with-db users
+  (with-users-db
     (if-let [user (get-user id)]
       (couch/delete-document user))))

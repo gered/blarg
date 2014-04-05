@@ -48,19 +48,19 @@
 (defn get-post [id]
   (merge-cached-post-md!
     (->single-post
-      (couch/with-db posts
+      (with-posts-db
         (couch/get-document id)))))
 
 (defn get-post-by-date-slug [date slug]
   (merge-cached-post-md!
     (->single-post
-      (couch/with-db posts
+      (with-posts-db
         (couch/get-view "posts" "listPostsBySlug" {:key [date, slug]})))))
 
 (defn add-post [title body user tags]
   (merge-cached-post-md!
     (->single-post
-      (couch/with-db posts
+      (with-posts-db
         (couch/put-document
           {:title title
            :slug (->slug title)
@@ -76,7 +76,7 @@
   (if-let [post (get-post id)]
     (merge-cached-post-md!
       (->single-post
-        (couch/with-db posts
+        (with-posts-db
           (couch/update-document
             (-> (date->string post timestamp-fields)
                 (merge (if title {:title title :slug (->slug title)}))
@@ -89,7 +89,7 @@
 
 (defn delete-post [id]
   (when-let [post (get-post id)]
-    (couch/with-db posts
+    (with-posts-db
       (couch/delete-document post))
     (remove-cached-post! post)
     post))
@@ -99,7 +99,7 @@
 
 (defn list-tags []
   (->view-keys
-    (couch/with-db posts
+    (with-posts-db
       (couch/get-view "posts" "listTags" {:group true}))))
 
 (defn list-posts
@@ -114,13 +114,13 @@
       (map
         merge-cached-post-md!
         (->post-list
-          (couch/with-db posts
+          (with-posts-db
             (couch/get-view "posts" viewName params)))))))
 
 (defn list-posts-by-tag [unpublished? tag]
   (let [view-name (if unpublished? "listPostsByTag" "listPublishedPostsByTag")]
     (if-let [posts (->post-list
-                     (couch/with-db posts
+                     (with-posts-db
                        (couch/get-view "posts" view-name {:key tag
                                                           :descending true})))]
       ;TODO: look into couchdb partial key matching to do this sort at the DB
@@ -129,7 +129,7 @@
 (defn list-posts-archive [unpublished?]
   (let [view-name (if unpublished? "listPostsArchive" "listPublishedPostsArchive")]
     (if-let [posts (->post-list
-                     (couch/with-db posts
+                     (with-posts-db
                        (couch/get-view "posts" view-name {:descending true})))]
       (map
         #(assoc % :mmyyyy (->nicer-month-year-str (:mmyyyy %)))
@@ -138,7 +138,7 @@
 (defn count-posts
   [unpublished?]
   (->first-view-value
-    (couch/with-db posts
+    (with-posts-db
       (couch/get-view 
         "posts" 
         (if unpublished? "countPosts" "countPublishedPosts")

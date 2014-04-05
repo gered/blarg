@@ -47,10 +47,10 @@
           :params {:errorInfo e}
           :status 500)))))
 
-(defonce routes (find-routes "blarg.routes." app-routes))
+(def routes (find-routes "blarg.routes." app-routes))
 
-(defonce app (app-handler
-               routes
-               :middleware [wrap-exceptions wrap-servlet-context-path]
-               :access-rules [{:redirect "/unauthorized" :rule auth-required}]
-               :formats [:json-kw :edn]))
+(def app (app-handler
+           routes
+           :middleware [wrap-exceptions wrap-servlet-context-path]
+           :access-rules [{:redirect "/unauthorized" :rule auth-required}]
+           :formats [:json-kw :edn]))

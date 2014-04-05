@@ -14,9 +14,24 @@
         :password pass)
       (cemerick.url/url url db))))
 
-(def users (db-url "blarg_users"))
-(def posts (db-url "blarg_posts"))
-(def files (db-url "blarg_files"))
+(defmacro with-db [url & body]
+  `(couch/with-db
+     ~url
+     ~@body))
+
+(defn get-users-db []
+  (db-url "blarg_users"))
+(defn get-posts-db []
+  (db-url "blarg_posts"))
+(defn get-files-db []
+  (db-url "blarg_files"))
+
+(defmacro with-users-db [& body]
+  `(with-db (get-users-db) ~@body))
+(defmacro with-posts-db [& body]
+  `(with-db (get-posts-db) ~@body))
+(defmacro with-files-db [& body]
+  `(with-db (get-files-db) ~@body))
 
 (defmacro ->view-keys
   "returns a sequence of only the keys returned by running a view"
@@ -48,8 +63,8 @@
   "verifies that the required databases are present, creating them if they
    are not there (including the views)."
   []
-  (couch/get-database users)
-  (when (couch/get-database files)
-    (touch-design-doc files "_design/files" "couchdb/design_docs/files.js"))
-  (when (couch/get-database posts)
-    (touch-design-doc posts "_design/posts" "couchdb/design_docs/posts.js")))
+  (couch/get-database (get-users-db))
+  (when (couch/get-database (get-files-db))
+    (touch-design-doc (get-files-db) "_design/files" "couchdb/design_docs/files.js"))
+  (when (couch/get-database (get-posts-db))
+    (touch-design-doc (get-posts-db) "_design/posts" "couchdb/design_docs/posts.js")))

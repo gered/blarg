@@ -7,7 +7,7 @@
 
 (defn file-exists? [file]
   (let [f (ensure-prefix file "/")]
-    (couch/with-db files
+    (with-files-db
       (not (zero? (count (couch/get-view "files" "listPublished" {:key f})))))))
 
 (defn get-file
@@ -15,7 +15,7 @@
   ([file allow-unpublished?]
     (let [f (ensure-prefix file "/")
           view-name (if allow-unpublished? "listAll" "listPublished")]
-      (couch/with-db files
+      (with-files-db
         (if-let [file-info (->first-view-value
                              (couch/get-view "files" view-name {:key f}))]
           (let [id         (:_id file-info)
@@ -30,7 +30,7 @@
 (defn list-files [path]
   (let [p (ensure-prefix-suffix path "/")]
     (if-let [file-list (->view-values
-                         (couch/with-db files
+                         (with-files-db
                            (couch/get-view "files" "listAllByPath" {:key p})))]
       (map
         (fn [f]
@@ -45,11 +45,11 @@
 
 (defn get-tree []
   (->view-keys
-    (couch/with-db files
+    (with-files-db
       (couch/get-view "files" "listPaths" {:group true}))))
 
 (defn add-file [path filename file content-type]
-  (couch/with-db files
+  (with-files-db
     (let [p (ensure-prefix-suffix path "/")
           id (str p filename)]
       (if-let [doc (couch/put-document {:_id id
@@ -60,7 +60,7 @@
         (couch/put-attachment doc file :filename filename :mime-type content-type)))))
 
 (defn update-file [id file content-type]
-  (couch/with-db files
+  (with-files-db
     (if-let [doc (couch/get-document id)]
       (let [filename (:filename doc)
             attachment (second (first (:_attachments doc)))]
@@ -70,13 +70,13 @@
 
 (defn delete-file [id]
   (let [safe-id (ensure-prefix id "/")]
-    (couch/with-db files
+    (with-files-db
       (if-let [doc (couch/get-document safe-id)]
         (couch/delete-document doc)))))
 
 (defn publish-file [id publish?]
   (let [safe-id (ensure-prefix id "/")]
-    (couch/with-db files
+    (with-files-db
       (if-let [doc (couch/get-document safe-id)]
         (couch/update-document (-> doc
                                  (assoc :last_modified_at (get-timestamp))
