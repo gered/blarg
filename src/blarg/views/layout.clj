@@ -2,7 +2,8 @@
   (:require [clj-jtwig.core :as jtwig]
             [ring.util.response :as resp]
             [compojure.response :refer [Renderable]]
-            [noir.session :as session])
+            [noir.session :as session]
+            [blarg.config :refer [config-val]])
   (:use [blarg.views.viewfilters]))
 
 (def template-path "views/")
@@ -12,6 +13,7 @@
     (str template-path template)
     (assoc params
       :context (:context request)
+      :isDev (= "DEV" (config-val :env))
       :userId (session/get :user))))
 
 (defn render-response [request template & {:keys [params status content-type]}]
