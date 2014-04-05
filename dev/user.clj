@@ -1,5 +1,5 @@
 (ns user
   (:use main))
 
-(start-server)
+(.start (Thread. #(-main)))
 

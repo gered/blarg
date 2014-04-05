@@ -1,8 +1,8 @@
-(defproject blarg "0.6"
+(defproject blarg "0.7"
   :description "webapp for http://blarg.ca/"
   :url "http://blarg.ca/"
   :dependencies
-  [[org.clojure/clojure "1.5.1"]
+  [[org.clojure/clojure "1.6.0"]
    [lib-noir "0.8.1"]
    [compojure "1.1.6"]
    [ring-server "0.3.1"]
