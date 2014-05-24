@@ -63,8 +63,8 @@
   "verifies that the required databases are present, creating them if they
    are not there (including the views)."
   []
-  (couch/get-database (get-users-db))
-  (when (couch/get-database (get-files-db))
+  #_(couch/get-database (get-users-db))
+  #_(when (couch/get-database (get-files-db))
     (touch-design-doc (get-files-db) "_design/files" "couchdb/design_docs/files.js"))
-  (when (couch/get-database (get-posts-db))
+  #_(when (couch/get-database (get-posts-db))
     (touch-design-doc (get-posts-db) "_design/posts" "couchdb/design_docs/posts.js")))
